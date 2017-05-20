@@ -26,7 +26,7 @@ class Tribes(object):
         """
         Create an instance of tribes.
         """
-        config_file = kwargs.get('config_file')
+        config_file = kwargs.get('config_file', ".\\configurations\\dev.json")
 
         app = Flask(__name__)
 
@@ -52,7 +52,7 @@ class Tribes(object):
         """
         Fire application
         """
-        self._tribes.run()
+        self._tribes.run(port=65010)
 
 
 if __name__ == '__main__':
