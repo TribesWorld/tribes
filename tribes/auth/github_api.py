@@ -6,18 +6,18 @@ auth_test.py create by v-zhidu
 """
 
 from flask import request, url_for, redirect
-from . import auth
+from auth import app
 
 import requests
 import requests.auth
-import logging
+
 CLIENT_ID = '0c3f470b984e0d972cd8'
 CLIENT_SECRET = 'aaff61a7280b590b27c3ff9c1042f59d7912ae5a'
 REDIRECT_URL = 'http://localhost:65010/git_call_back'
 
 
-@auth.route('/')
-def index():
+@app.route('/')
+def home():
     """
     测试
     """
@@ -25,20 +25,19 @@ def index():
     return text % make_authorization_url()
 
 
-@auth.route('/user')
+@app.route('/user')
 def get_github_user():
     if not request.headers.get('Authorization'):
         return redirect(url_for('auth.index'))
     else:
         token = request.headers.get('Authorization')
-        logging.debug(token)
         res = requests.get('https://api.github.com/user',
                            headers={'Authorization': token})
 
         return res.text
 
 
-@auth.route('/git_call_back')
+@app.route('/git_call_back')
 def github_callback():
     error = request.args.get('error', '')
     if error:
