@@ -4,13 +4,11 @@
 
 demo.py create by v-zhidu
 """
-from flask import Blueprint, current_app
-
-a = Blueprint('a', __name__)
+from . import auth
 
 
-@a.route('/')
+@auth.route('/')
 def index():
     """ demo
     """
-    return current_app.config['MY_VALUE'] is True
+    return "d"

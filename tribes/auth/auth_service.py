@@ -17,7 +17,7 @@ class AuthService(Service):
     def register_component(self, app, **kwargs):
         """register component.
         """
-        from demo import a as auth_blueprint
+        from . import auth as auth_blueprint
         self.instance.register_blueprint(auth_blueprint)
 
 
