@@ -4,13 +4,13 @@
 
 demo.py create by v-zhidu
 """
+from flask import Blueprint, current_app
 
-from flask import Blueprint
-demo = Blueprint('demo', __name__, url_prefix='/demo')
+a = Blueprint('a', __name__)
 
 
-@demo.route('/')
+@a.route('/')
 def index():
     """ demo
     """
-    return 'auth.demo'
+    return current_app.config['MY_VALUE']

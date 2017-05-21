@@ -1,3 +1,4 @@
 {
-    "DEBUG": true
+    "DEBUG": true,
+    "MY_VALUE": "fsd"
 }

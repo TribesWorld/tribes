@@ -4,24 +4,21 @@
 
 auth_service.py create by v-zhidu
 """
+from service import Service
+from utils import initialize_class
 
-from tribes.base_service import BaseService
-from tribes.utils import initialize_class
 
-
-class AuthService(BaseService):
+class AuthService(Service):
     """统一身份认证服务
     """
 
     def register_component(self, app, **kwargs):
         """register component.
         """
-        demo = kwargs.get('demo', 'tribes.auth.demo')
-        self._demo = initialize_class(demo, **kwargs)
-
-        app.register_blueprint(self._demo)
+        from demo import a as auth_blueprint
+        self.instance.register_blueprint(auth_blueprint)
 
 
 if __name__ == '__main__':
     application = AuthService()
-    application.service.run()
+    application.instance.run(debug=True)
