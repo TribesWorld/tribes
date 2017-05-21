@@ -26,7 +26,7 @@ class Tribes(object):
         """
         Create an instance of tribes.
         """
-        config_file = kwargs.get('config_file', ".\\configurations\\dev.json")
+        config_file = kwargs.get('config_file', ".\\_config\\dev.json")
 
         app = Flask(__name__)
 
@@ -45,7 +45,7 @@ class Tribes(object):
         Register route and error handler
         """
         # authentication service
-        from auth import auth as auth_blueprint
+        from auth_service import auth as auth_blueprint
         app.register_blueprint(auth_blueprint)
 
     def start_tribes(self):

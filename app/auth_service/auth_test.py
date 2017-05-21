@@ -4,6 +4,7 @@
 
 auth_test.py create by v-zhidu
 """
+
 from flask import request, url_for, redirect
 from . import auth
 
