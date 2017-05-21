@@ -17,10 +17,10 @@ class AuthService(Service):
     def register_component(self, app, **kwargs):
         """register component.
         """
-        from . import auth as auth_blueprint
+        from index import auth as auth_blueprint
         self.instance.register_blueprint(auth_blueprint)
 
 
 if __name__ == '__main__':
-    application = AuthService(config_file='D:\\Code\\tribes\\tribes\\dev.json')
-    application.instance.run(debug=True)
+    application = AuthService()
+    application.instance.run(debug=True, port=5001)

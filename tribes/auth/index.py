@@ -4,11 +4,13 @@
 
 demo.py create by v-zhidu
 """
-from . import auth
+from flask import Blueprint
+
+auth = Blueprint('auth', __name__)
 
 
 @auth.route('/')
 def index():
-    """ demo
+    """ index
     """
-    return "d"
+    return "index page"
