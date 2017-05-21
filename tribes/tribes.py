@@ -7,8 +7,12 @@ start_up.py create by v-zhidu
 import os
 
 from flask import Flask
+from werkzeug.wsgi import DispatcherMiddleware
 
+from auth.demo import demo
 from config import DefaultConfig
+
+from auth.auth_service import AuthService
 
 
 class Tribes(object):
@@ -45,8 +49,10 @@ class Tribes(object):
         Register route and error handler
         """
         # authentication service
-        from auth_service import auth as auth_blueprint
-        app.register_blueprint(auth_blueprint)
+        service1 = AuthService()
+        app = DispatcherMiddleware(app, {
+            '/auth': service1.service
+        })
 
     def start_tribes(self):
         """
