@@ -19,15 +19,11 @@ class Service(object):
 
     def __init__(self, **kwargs):
         self._instance = Flask(__name__)
-        self._config_instance(self._instance, **kwargs)
+        self._config_instance(self._instance)
         self.register_component(self._instance, **kwargs)
 
-    def _config_instance(self, app, **kwargs):
-        config_file = kwargs.get(
-            'tribes_config', constant.TRIBES_DEFAULT_CONFIG)
-
-        if config_file is not None:
-            app.config.from_json(config_file, silent=False)
+    def _config_instance(self, app):
+        app.config.from_envvar(constant.TRIBES_CONFIG_KEY)
 
     @property
     def instance(self):
@@ -38,6 +34,8 @@ class Service(object):
 
     @abstractmethod
     def register_component(self, app, **kwargs):
+        """ 加载组件
+        """
         pass
 
 

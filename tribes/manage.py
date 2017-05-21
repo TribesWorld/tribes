@@ -5,10 +5,7 @@ from flask_script import Manager, Shell
 from tribes import Tribes
 import constant
 
-if not os.getenv('TRIBES_CONFIG'):
-    tribes = Tribes(tribes_config='D:\\Code\\tribes\\tribes\\dev.json')
-else:
-    tribes = Tribes(tribes_config='D:\\Code\\tribes\\tribes\\dev.json')
+tribes = Tribes()
 
 manager = Manager(tribes.instance)
 

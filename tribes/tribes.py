@@ -29,6 +29,7 @@ class Tribes(Service):
 
 
 if __name__ == '__main__':
+    import os
     application = Tribes()
-    run_simple('localhost', 5000, application.instance,
+    run_simple('localhost', 5001, application.instance,
                use_reloader=True, use_debugger=True, use_evalex=True)
