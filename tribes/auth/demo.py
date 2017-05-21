@@ -13,4 +13,4 @@ a = Blueprint('a', __name__)
 def index():
     """ demo
     """
-    return current_app.config['MY_VALUE']
+    return current_app.config.get('MY_VALUE')

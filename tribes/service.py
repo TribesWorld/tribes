@@ -4,10 +4,13 @@ Base Service
 
 base_app.py create by v-zhidu
 """
+from __future__ import unicode_literals
 
 from abc import abstractmethod
 
 from flask import Flask
+
+import constant
 
 
 class Service(object):
@@ -20,13 +23,17 @@ class Service(object):
         self.register_component(self._instance, **kwargs)
 
     def _config_instance(self, app, **kwargs):
-        config_file = kwargs.get('config_file')
+        config_file = kwargs.get(
+            'tribes_config', constant.TRIBES_DEFAULT_CONFIG)
 
         if config_file is not None:
-            app.config.from_json(config_file, silent=True)
+            app.config.from_json(config_file, silent=False)
 
     @property
     def instance(self):
+        """
+        Flask Instance
+        """
         return self._instance
 
     @abstractmethod

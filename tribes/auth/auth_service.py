@@ -5,12 +5,14 @@
 auth_service.py create by v-zhidu
 """
 from service import Service
-from utils import initialize_class
 
 
 class AuthService(Service):
     """统一身份认证服务
     """
+
+    def __init__(self, **kwargs):
+        super(AuthService, self).__init__(**kwargs)
 
     def register_component(self, app, **kwargs):
         """register component.
@@ -20,5 +22,5 @@ class AuthService(Service):
 
 
 if __name__ == '__main__':
-    application = AuthService()
+    application = AuthService(config_file='D:\\Code\\tribes\\tribes\\dev.json')
     application.instance.run(debug=True)
