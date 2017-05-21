@@ -4,7 +4,10 @@
 
 auth_service.py create by v-zhidu
 """
-from service import Service
+import sys
+sys.path.append('..')
+
+from common import Service
 
 
 class AuthService(Service):

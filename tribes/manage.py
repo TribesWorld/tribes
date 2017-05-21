@@ -1,9 +1,12 @@
 #! /usr/bin/env python
+"""
+Module Description
 
-import os
+manage.py create by v-zhidu
+"""
+
 from flask_script import Manager, Shell
 from tribes import Tribes
-import constant
 
 tribes = Tribes()
 

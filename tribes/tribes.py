@@ -9,7 +9,7 @@ from werkzeug.serving import run_simple
 from werkzeug.wsgi import DispatcherMiddleware
 
 from auth.auth_service import AuthService
-from service import Service
+from common.service import Service
 
 
 class Tribes(Service):
