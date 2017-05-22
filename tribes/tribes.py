@@ -22,14 +22,13 @@ class Tribes(Service):
         Register route and error handler
         """
         # authentication service
-        service1 = AuthService(**kwargs)
+        auth_service = AuthService(**kwargs)
         app.wsgi_app = DispatcherMiddleware(app.wsgi_app, {
-            '/auth': service1.instance
+            '/auth': auth_service.instance
         })
 
 
 if __name__ == '__main__':
-    import os
     application = Tribes()
     run_simple('localhost', 5001, application.instance,
                use_reloader=True, use_debugger=True, use_evalex=True)

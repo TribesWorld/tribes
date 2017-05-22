@@ -12,6 +12,5 @@ tribes = Tribes()
 
 manager = Manager(tribes.instance)
 
-manager.add_command("shell", Shell)
 if __name__ == '__main__':
     manager.run()

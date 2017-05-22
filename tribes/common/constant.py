@@ -4,5 +4,3 @@
 
 constant.py create by v-zhidu
 """
-
-TRIBES_CONFIG_KEY = 'TRIBES_CONFIG'
