@@ -8,8 +8,9 @@ start_up.py create by v-zhidu
 from werkzeug.serving import run_simple
 from werkzeug.wsgi import DispatcherMiddleware
 
-from auth.auth_service import AuthService
+from auth import auth
 from common.service import Service
+from auth.auth_service import AuthService
 
 
 class Tribes(Service):
@@ -22,13 +23,13 @@ class Tribes(Service):
         Register route and error handler
         """
         # authentication service
-        auth_service = AuthService(**kwargs)
+        auth_service = AuthService(**kwargs).instance
         app.wsgi_app = DispatcherMiddleware(app.wsgi_app, {
-            '/auth': auth_service.instance
+            '/auth': auth_service
         })
 
 
 if __name__ == '__main__':
     application = Tribes()
-    run_simple('localhost', 5001, application.instance,
+    run_simple('localhost', 8000, application.instance,
                use_reloader=True, use_debugger=True, use_evalex=True)

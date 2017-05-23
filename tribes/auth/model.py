@@ -4,7 +4,7 @@ User Object
 
 user.py create by v-zhidu
 """
-from common.service import db
+from common.service import db, ma
 
 
 class User(db.Model):
@@ -26,6 +26,11 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+
+class UserSchema(ma.Schema):
+    class Meta:
+        fields = ('username', 'email')
 
 
 class Client(db.Model):

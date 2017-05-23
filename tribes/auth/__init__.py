@@ -4,13 +4,12 @@ Module Description
 
 __init__.py create by v-zhidu
 """
-
-from flask import Blueprint, current_app
+from flask import Blueprint
+from common.service import api
 
 auth = Blueprint('auth', __name__)
-from flask_oauthlib.provider import OAuth2Provider
 
-oauth = OAuth2Provider()
+from auth import errors
 
-from . import github_api
-from . import oauth_service
+from user_resource import UserResource
+api.add_resource(UserResource, '/user')

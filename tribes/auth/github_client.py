@@ -38,7 +38,7 @@ def get_github_token(token=None):
 
 @app.route('/login')
 def login():
-    return github.authorize(callback='http://localhost:65010/git_call_back')
+    return github.authorize(callback='http://localhost:65010/authorized')
 
 
 @app.route('/authorized')
