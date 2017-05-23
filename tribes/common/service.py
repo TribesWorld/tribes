@@ -42,11 +42,17 @@ class Service(object):
     def register_component(self, app, **kwargs):
         """ 加载组件
         """
-        api.init_app(app)
+        if kwargs.get('restful', True):
+            # 选择是否开启RESTApi
+            api.init_app(app)
         # 加载数据库
-        if 'SQLALCHEMY_DATABASE_URI' in app.config:
-            db.init_app(app)
-            db.app = app
+        if kwargs.get('use_db', False) is True:
+            if 'SQLALCHEMY_DATABASE_URI' in app.config:
+                db.init_app(app)
+                db.app = app
+            else:
+                raise Exception(
+                    'SQLALCHEMY_DATABASE_URI must be set in config.py')
 
     def error_handler(self, app, **kwargs):
         from error_handler import ErrorHandler
