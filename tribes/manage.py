@@ -1,11 +1,16 @@
 #! /usr/bin/env python
+# !-*- encoding=utf-8 -*-
 """
-Module Description
+    tribes.manage.py
+    ~~~~~~~~~~~~~~~~~~
 
-manage.py create by v-zhidu
+    使用flask-script插件在命令行运行程序
+
+    : copyright: (c) YEAR by v-zhidu.
+    : license: LICENSE_NAME, see LICENSE_FILE
 """
 
-from flask_script import Manager, Shell
+from flask_script import Manager
 from tribes import Tribes
 
 tribes = Tribes(use_db=True)

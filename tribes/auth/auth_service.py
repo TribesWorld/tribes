@@ -1,8 +1,12 @@
 # !-*- encoding=utf-8 -*-
 """
-统一身份认证服务
+    auth.auth_service.py
+    ~~~~~~~~~~~~~~~~~~
 
-auth_service.py create by v-zhidu
+    统一身份认证服务
+
+    : copyright: (c) YEAR by v-zhidu.
+    : license: LICENSE_NAME, see LICENSE_FILE
 """
 
 from common.service import Service, db
