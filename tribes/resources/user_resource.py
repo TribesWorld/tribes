@@ -9,13 +9,13 @@
     : license: LICENSE_NAME, see LICENSE_FILE
 """
 
-from auth.dao import user_dao
 from flask import jsonify
 from flask_restful import Resource, reqparse
 
 from common.error_handler import make_api_error
 from common.service import api
-from auth import auth
+from dao import user_dao
+
 parser = reqparse.RequestParser()
 parser.add_argument('name', type=str)
 
@@ -48,7 +48,8 @@ class UserResource(Resource):
         """delete /user/<user_id>
         根据用户id删除用户
         """
-        pass
+        from common.exceptions import ValidationError
+        raise ValidationError('sss')
 
     def _check(self, user_id):
         if not user_dao.is_user_existed(user_id):

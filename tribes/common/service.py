@@ -63,10 +63,14 @@ class Service(object):
         """全局的异常处理方法"""
         from error_handler import make_error
         from common.exceptions import ValidationError
-
-        app.error_handlers = {}
+        from sqlalchemy.exc import OperationalError
 
         @app.errorhandler(ValidationError)
         def validation_error(e):
             """参数验证异常,返回400错误"""
             return make_error(400, description=e.args[0])
+
+        @app.errorhandler(OperationalError)
+        def database_error(e):
+            """数据库操作异常"""
+            return make_error(500, e.args[0])

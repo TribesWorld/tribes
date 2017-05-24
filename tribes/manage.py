@@ -11,11 +11,10 @@
 """
 
 from flask_script import Manager
-from tribes import Tribes
+from tribes import application
 
-tribes = Tribes(use_db=True)
 
-manager = Manager(tribes.instance)
+manager = Manager(application.instance)
 
 if __name__ == '__main__':
     manager.run()
