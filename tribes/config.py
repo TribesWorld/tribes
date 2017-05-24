@@ -32,7 +32,7 @@ class DevelopmentConfig(Config):
         'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
 
 
-config = {
+configuration = {
     'development': DevelopmentConfig,
     'default': DevelopmentConfig
 }

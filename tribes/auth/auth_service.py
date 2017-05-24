@@ -8,7 +8,8 @@
     : copyright: (c) YEAR by v-zhidu.
     : license: LICENSE_NAME, see LICENSE_FILE
 """
-
+import sys
+sys.path.append('/Users/duzhiqiang/Code/tribes/tribes')
 from common.service import Service, db
 
 

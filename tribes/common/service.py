@@ -12,11 +12,12 @@
 from __future__ import unicode_literals
 
 from abc import abstractmethod
-from config import config
 
 from flask import Flask
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
+
+from config import configuration
 
 db = SQLAlchemy()
 api = Api()
@@ -29,11 +30,11 @@ class Service(object):
         self._instance = Flask(__name__)
         self._config_instance(self._instance, **kwargs)
         self.register_component(self._instance, **kwargs)
-        self.error_handler(self._instance, **kwargs)
+        self.error_handler(self._instance)
 
     def _config_instance(self, app, **kwargs):
         config_name = kwargs.get('config_name', 'default')
-        app.config.from_object(config[config_name])
+        app.config.from_object(configuration[config_name])
 
     @property
     def instance(self):
@@ -60,10 +61,12 @@ class Service(object):
 
     def error_handler(self, app):
         """全局的异常处理方法"""
-        from error_handler import ErrorHandler
+        from error_handler import make_error
         from common.exceptions import ValidationError
+
+        app.error_handlers = {}
 
         @app.errorhandler(ValidationError)
         def validation_error(e):
             """参数验证异常,返回400错误"""
-            return ErrorHandler.bad_request(e.args[0])
+            return make_error(400, description=e.args[0])

@@ -3,7 +3,7 @@
     auth.errors.py
     ~~~~~~~~~~~~~~~~~~
 
-    服务单独的异常处理
+    服务单独的异常处理, 只在蓝图和Flask实例中生效，api扩展无效
     # example
     from auth import auth
     from common.errors import ErrorHandler
