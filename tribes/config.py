@@ -21,9 +21,10 @@ class DevelopmentConfig(Config):
     """ 开发环境配置
     """
     DEBUG = True
-    # OAUTH2_PROVIDER_TOKEN_EXPIRES_IN = 3600
-    # OAUTH2_PROVIDER_ERROR_URI = '/oauth/errors'
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
+        'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
+    # 如需拆分数据库，则添加此配置项
+    AUTH_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
 
 

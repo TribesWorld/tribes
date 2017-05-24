@@ -8,7 +8,7 @@ manage.py create by v-zhidu
 from flask_script import Manager, Shell
 from tribes import Tribes
 
-tribes = Tribes()
+tribes = Tribes(use_db=True)
 
 manager = Manager(tribes.instance)
 

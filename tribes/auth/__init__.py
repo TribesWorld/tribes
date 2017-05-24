@@ -5,11 +5,11 @@ Module Description
 __init__.py create by v-zhidu
 """
 from flask import Blueprint
-from common.service import api
+from common.service import api, db
 
 auth = Blueprint('auth', __name__)
 
 from auth import errors
 
-from user_resource import UserResource
-api.add_resource(UserResource, '/user')
+from resources.user_resource import UserResource
+api.add_resource(UserResource, '/user/<user_id>')

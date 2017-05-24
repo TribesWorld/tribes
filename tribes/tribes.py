@@ -30,6 +30,6 @@ class Tribes(Service):
 
 
 if __name__ == '__main__':
-    application = Tribes()
+    application = Tribes(use_db=True)
     run_simple('localhost', 8000, application.instance,
                use_reloader=True, use_debugger=True, use_evalex=True)

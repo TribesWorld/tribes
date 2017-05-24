@@ -42,9 +42,10 @@ class Service(object):
     def register_component(self, app, **kwargs):
         """ 加载组件
         """
-        if kwargs.get('restful', True):
+        if kwargs.get('restful', True) is True:
             # 选择是否开启RESTApi
-            api.init_app(app)
+            pass
+        api.init_app(app)
         # 加载数据库
         if kwargs.get('use_db', False) is True:
             if 'SQLALCHEMY_DATABASE_URI' in app.config:
@@ -56,7 +57,7 @@ class Service(object):
 
     def error_handler(self, app, **kwargs):
         from error_handler import ErrorHandler
-        from exceptions import ValidationError
+        from common.exceptions import ValidationError
 
         @app.errorhandler(ValidationError)
         def validation_error(e):
