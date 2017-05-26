@@ -1,7 +1,6 @@
 {
     "version": "0.2.0",
-    "configurations": [
-        {
+    "configurations": [{
             "name": "Python",
             "type": "python",
             "request": "launch",
@@ -116,17 +115,17 @@
             "request": "launch",
             "stopOnEntry": false,
             "pythonPath": "${config:python.pythonPath}",
-            "program": "fully qualified path fo 'flask' executable. Generally located along with python interpreter",
+            "program": "${workspaceRoot}/tribes/tribes.py",
             "cwd": "${workspaceRoot}",
             "env": {
-                "FLASK_APP": "${workspaceRoot}/quickstart/app.py"
+                "DEV_DATABASE_URL": "mysql://root:tribes@121.42.244.187:3382/tribes"
             },
             "args": [
-                "run",
-                "--no-debugger",
-                "--no-reload"
+                "run"
+                // "--no-debugger",
+                // "--no-reload
             ],
-            "envFile": "${workspaceRoot}/.env",
+            "envFile": "${workspaceRoot}/.venv",
             "debugOptions": [
                 "WaitOnAbnormalExit",
                 "WaitOnNormalExit",

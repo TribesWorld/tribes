@@ -33,3 +33,7 @@ from resources import UserResource
 
 
 application = Tribes(use_db=True)
+
+
+if __name__ == '__main__':
+    application.instance.run(debug=True, port=5000)
