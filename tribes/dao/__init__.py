@@ -24,6 +24,16 @@ def after_connect():
     print 'close'
 
 
+@db_context.before_transcation
+def before_trans():
+    print 'open trans'
+
+
+@db_context.after_transcation
+def after_trans():
+    print 'close trans'
+
+
 @db_context.across_error
 def across_error(error):
     print error.args[0]

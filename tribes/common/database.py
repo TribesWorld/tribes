@@ -34,6 +34,11 @@ def _default_connect_handler():
     pass
 
 
+def _default_transcation_handler():
+    """开启或关闭事务的默认处理方法"""
+    pass
+
+
 def _default_error_handler(error):
     """操作过程中的错误处理方法"""
     pass
@@ -60,6 +65,8 @@ class Database(object):
         # operation handler
         self._before_connect_handler = _default_connect_handler
         self._after_connect_handler = _default_connect_handler
+        self._before_transcation_handler = _default_transcation_handler
+        self._after_transcation_handler = _default_transcation_handler
         self._across_error_handler = _default_error_handler
 
     def _execute(self, sql, *args):
@@ -82,6 +89,7 @@ class Database(object):
 
     def begin_transaction(self):
         """开启事务支持"""
+        self._before_transcation_handler()
         self._connect()
         self._trans = self._conn.begin()
 
@@ -92,6 +100,7 @@ class Database(object):
 
     def end_transaction(self):
         """提交事务"""
+        self._after_transcation_handler()
         if self._trans is not None:
             self._trans.commit()
 
@@ -168,6 +177,18 @@ class Database(object):
                 print 'c'
         """
         self._after_connect_handler = callback
+
+        return callback
+
+    def before_transcation(self, callback):
+        """开启事务前的操作"""
+        self._before_transcation_handler = callback
+
+        return callback
+
+    def after_transcation(self, callback):
+        """结束事务前的操作"""
+        self._after_transcation_handler = callback
 
         return callback
 
