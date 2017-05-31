@@ -21,9 +21,10 @@ def is_user_existed(user_id):
 def insert_user(name):
     """添加用户"""
     sql = "insert into t_user (name) values ('{0}')"
-
-    print db_context.execute(sql, name)
-    return db_context.execute(sql, name)
+    sql2 = "insert into t_user_test (name) values ('{0}')"
+    db_context.begin_transaction()
+    db_context.execute(sql, name)
+    db_context.execute(sql2, name)
 
 
 def find_all():

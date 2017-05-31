@@ -54,6 +54,7 @@ class Database(object):
             raise TypeError('database must be set by a SQLAlchemy object.')
         self._db = database
         self._conn = None
+        self._trans = None
         self._conn_state = ConnectState.PREPARED
 
         # operation handler
@@ -62,45 +63,57 @@ class Database(object):
         self._across_error_handler = _default_error_handler
 
     def _execute(self, sql, *args):
-        """执行sql语句
-        """
+        """执行sql语句"""
         try:
+
             self._before_connect_handler()
             self._connect()
 
             return self._conn.execute(format_sql(sql, *args))
         except Exception as ex:
             self._across_error_handler(ex)
+            self.abort_transaction()
             raise ex
+        else:
+            self.end_transaction()
         finally:
             self._close()
             self._after_connect_handler()
 
+    def begin_transaction(self):
+        """开启事务支持"""
+        self._connect()
+        self._trans = self._conn.begin()
+
+    def abort_transaction(self):
+        """中断事务"""
+        if self._trans is not None:
+            self._trans.rollback()
+
+    def end_transaction(self):
+        """提交事务"""
+        if self._trans is not None:
+            self._trans.commit()
+
     def execute(self, sql, *args):
-        """执行sql语句
-        """
+        """执行sql语句"""
         result = self._execute(sql, *args)
 
         return self.process_result(result)
 
     def query(self, sql, *args):
-        """查询方法
-        """
+        """查询方法"""
         result = self._execute(sql, *args)
 
         return self.process_result(result)
 
     def query_count(self, sql, *args):
-        """
-        查询数量使用
-        """
+        """查询数量使用"""
         result = self._execute(sql, *args)
         return result.first()[0]
 
     def query_one(self, sql, *args):
-        """
-        查询单行使用
-        """
+        """查询单行使用"""
 
         result = self.execute(sql, *args)
         if len(result) > 0:
@@ -117,7 +130,7 @@ class Database(object):
 
     def process_result(self, result):
         """
-        :param ResultProxy
+        : param ResultProxy
         """
         lis = []
         if result.returns_rows:
@@ -134,6 +147,7 @@ class Database(object):
         """关闭数据库连接"""
         if self._conn_state == ConnectState.OPENED:
             self._conn.close()
+            self._conn_state = ConnectState.CLOSE
 
     def before_connect(self, callback):
         """指定在开启连接前的操作
@@ -164,7 +178,7 @@ class Database(object):
             def across_error():
                 print 'c'
 
-        :param callback: the exception object.
+        : param callback: the exception object.
         """
         self._across_error_handler = callback
 

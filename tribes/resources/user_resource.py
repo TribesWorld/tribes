@@ -8,7 +8,6 @@
     : copyright: (c) YEAR by v-zhidu.
     : license: LICENSE_NAME, see LICENSE_FILE
 """
-from flask import jsonify
 from flask_restful import Resource, reqparse
 
 from common.error_handler import make_api_error
@@ -80,7 +79,7 @@ class UserListResource(Resource):
         name = args['name']
         # temp
         user_dao.insert_user(name)
-        return jsonify({'1': '1'}), 201
+        return '', 201
 
     def _check(self, user_id):
         if user_dao.is_user_existed(user_id) is True:
