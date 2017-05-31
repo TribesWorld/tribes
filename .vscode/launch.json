@@ -113,19 +113,22 @@
             "name": "Flask",
             "type": "python",
             "request": "launch",
-            "stopOnEntry": false,
+            "stopOnEntry": true,
             "pythonPath": "${config:python.pythonPath}",
-            "program": "${workspaceRoot}/tribes/tribes.py",
+            "program": "${workspaceRoot}/venv/bin/flask",
             "cwd": "${workspaceRoot}",
             "env": {
+                "FLASK_APP": "${workspaceRoot}/tribes/tribes.py",
+                "FLASK_DEBUG": 1,
                 "DEV_DATABASE_URL": "mysql://root:tribes@121.42.244.187:3382/tribes"
             },
             "args": [
-                "run"
-                // "--no-debugger",
-                // "--no-reload
+                "run",
+                "-p 5001",
+                "--no-debugger",
+                "--no-reload"
             ],
-            "envFile": "${workspaceRoot}/.venv",
+            "envFile": "${workspaceRoot}/venv",
             "debugOptions": [
                 "WaitOnAbnormalExit",
                 "WaitOnNormalExit",

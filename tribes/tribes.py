@@ -9,7 +9,7 @@
     :license: LICENSE_NAME, see LICENSE_FILE
 """
 
-from common.service import Service, api
+from common.service import Service
 
 
 class Tribes(Service):
@@ -32,8 +32,4 @@ class Tribes(Service):
 from resources import UserResource
 
 
-application = Tribes(use_db=True)
-
-
-if __name__ == '__main__':
-    application.instance.run(debug=True, port=5000)
+app = Tribes(use_db=True).instance

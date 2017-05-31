@@ -8,19 +8,22 @@
     : copyright: (c) YEAR by v-zhidu.
     : license: LICENSE_NAME, see LICENSE_FILE
 """
-from enum import Enum, unique
+from enum import Enum
 from flask_sqlalchemy import SQLAlchemy
 
 
-@unique
+# @unique
 class ConnectState(Enum):
+    """
+    数据库连接状态枚举值
+    """
     PREPARED = -1,
     CLOSE = 0,
     OPENED = 1
 
 
-def make_sql(sql, *args):
-    """组合sql语句"""
+def format_sql(sql, *args):
+    """格式化sql语句"""
     if not isinstance(sql, str) or None:
         raise ValueError('query sentence must not be empty.')
     return sql.format(*args)
@@ -65,7 +68,7 @@ class Database(object):
             self._before_connect_handler()
             self._connect()
 
-            return self._conn.execute(make_sql(sql, *args))
+            return self._conn.execute(format_sql(sql, *args))
         except Exception as ex:
             self._across_error_handler(ex)
             raise ex
@@ -107,10 +110,10 @@ class Database(object):
 
     def _connect(self):
         """开启数据库连接"""
-        self._conn = self._db.engine.connect()
-        # if self._conn_state == ConnectState.CLOSE:
-        #     self._conn = self._db.engine.connect()
-        #     self._conn_state = ConnectState.OPENED
+        # self._conn = self._db.engine.connect()
+        if not self._conn_state == ConnectState.OPENED:
+            self._conn = self._db.engine.connect()
+            self._conn_state = ConnectState.OPENED
 
     def process_result(self, result):
         """

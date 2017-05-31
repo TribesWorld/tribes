@@ -72,6 +72,9 @@ class UserListResource(Resource):
         return user_dao.find_all()
 
     def post(self):
+        """POST /users/
+        新建用户
+        """
         args = parser.parse_args()
         args = parser.parse_args()
         name = args['name']
