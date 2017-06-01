@@ -58,7 +58,7 @@ class UserResource(Resource):
             make_api_error(404, description='user not found')
 
 
-@api.resource('/users/')
+@api.resource('/users')
 class UserListResource(Resource):
     """
     操作用户
@@ -77,7 +77,7 @@ class UserListResource(Resource):
         args = parser.parse_args()
         args = parser.parse_args()
         name = args['name']
-        # temp
+        # TODO(du_zhi_qiang@163.com): 新建需要返回主键.
         user_dao.insert_user(name)
         return '', 201
 
