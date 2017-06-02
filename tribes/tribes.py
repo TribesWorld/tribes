@@ -10,6 +10,7 @@
 """
 
 from common.service import Service
+from services import users
 
 
 class Tribes(Service):
@@ -29,9 +30,8 @@ class Tribes(Service):
 
 
 # 必须在实例Tribes之前导入资源文件
-from resources import UserResource
+# from resources import UserResource
 
 app = Tribes(use_db=True).instance
 
-from services import users
 app.register_blueprint(users)
