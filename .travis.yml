@@ -15,4 +15,4 @@ notifications:
   slack:
     rooms:
       - tribesworld:dzHBgVIhNFNIzILqXHeswFgt
-      - tribesworld:dzHBgVIhNFNIzILqXHeswFgt#tribes
+      # - tribesworld:dzHBgVIhNFNIzILqXHeswFgt#tribes
