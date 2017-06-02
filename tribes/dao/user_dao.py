@@ -23,7 +23,9 @@ def insert_user(name):
     sql = "insert into t_user (name) values ('{0}')"
     get_id_sql = "select MAX(id) from t_user"
 
+    db_context.begin_transaction()
     db_context.execute(sql, name)
+
     return db_context.query_count(get_id_sql)
 
 

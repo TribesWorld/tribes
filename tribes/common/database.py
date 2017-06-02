@@ -85,13 +85,14 @@ class Database(object):
             sql = format_sql(sql, *args)
             self._on_execute_sql_handler(sql)
 
-            return self._conn.execute(sql)
+            result = self._conn.execute(sql)
+
+            self.end_transaction()
+            return result
         except Exception as ex:
             self._across_error_handler(ex)
             self.abort_transaction()
             raise ex
-        else:
-            self.end_transaction()
         finally:
             self._close()
             self._after_connect_handler()
@@ -104,13 +105,13 @@ class Database(object):
 
     def abort_transaction(self):
         """中断事务"""
-        if self._trans is not None:
+        if self._trans.is_active:
             self._trans.rollback()
 
     def end_transaction(self):
         """提交事务"""
         self._after_transcation_handler()
-        if self._trans is not None:
+        if self._trans.is_active:
             self._trans.commit()
 
     def execute(self, sql, *args):
