@@ -30,7 +30,6 @@ class Tribes(Service):
 
 
 # 必须在实例Tribes之前导入资源文件
-# from resources import UserResource
 
 app = Tribes(use_db=True).instance
 

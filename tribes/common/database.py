@@ -78,7 +78,6 @@ class Database(object):
     def _execute(self, sql, *args):
         """执行sql语句"""
         try:
-
             self._before_connect_handler()
             self._connect()
 
@@ -105,13 +104,13 @@ class Database(object):
 
     def abort_transaction(self):
         """中断事务"""
-        if self._trans.is_active:
+        if self._trans is not None and self._trans.is_active:
             self._trans.rollback()
 
     def end_transaction(self):
         """提交事务"""
         self._after_transcation_handler()
-        if self._trans.is_active:
+        if self._trans is not None and self._trans.is_active:
             self._trans.commit()
 
     def execute(self, sql, *args):
