@@ -10,30 +10,36 @@
 """
 from common.service import db
 from common.database import Database
+from flask import current_app
 
 db_context = Database(db)
 
 
 @db_context.before_connect
 def before_connect():
-    print 'open'
+    current_app.logger.debug('open')
 
 
 @db_context.after_connect
 def after_connect():
-    print 'close'
+    current_app.logger.debug('close')
 
 
 @db_context.before_transcation
 def before_trans():
-    print 'open trans'
+    current_app.logger.debug('open trans')
 
 
 @db_context.after_transcation
 def after_trans():
-    print 'close trans'
+    current_app.logger.debug('close trans')
 
 
 @db_context.across_error
 def across_error(error):
-    print error.args[0]
+    current_app.logger.debug(error.args[0])
+
+
+@db_context.on_execute_sql
+def on_execute_sql(sql):
+    current_app.logger.debug(sql)

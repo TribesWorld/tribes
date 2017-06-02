@@ -44,6 +44,11 @@ def _default_error_handler(error):
     pass
 
 
+def _default_execute_handler(sql):
+    """执行sql语句"""
+    pass
+
+
 class Database(object):
     """
     数据库操作抽象类
@@ -68,6 +73,7 @@ class Database(object):
         self._before_transcation_handler = _default_transcation_handler
         self._after_transcation_handler = _default_transcation_handler
         self._across_error_handler = _default_error_handler
+        self._on_execute_sql_handler = _default_execute_handler
 
     def _execute(self, sql, *args):
         """执行sql语句"""
@@ -76,7 +82,10 @@ class Database(object):
             self._before_connect_handler()
             self._connect()
 
-            return self._conn.execute(format_sql(sql, *args))
+            sql = format_sql(sql, *args)
+            self._on_execute_sql_handler(sql)
+
+            return self._conn.execute(sql)
         except Exception as ex:
             self._across_error_handler(ex)
             self.abort_transaction()
@@ -202,5 +211,16 @@ class Database(object):
         : param callback: the exception object.
         """
         self._across_error_handler = callback
+
+        return callback
+
+    def on_execute_sql(self, callback):
+        """执行sql语句时的处理方法
+
+            @database.on_execute_sql
+            def on_execute_sql(sql):
+                print sql
+        """
+        self._on_execute_sql_handler = callback
 
         return callback

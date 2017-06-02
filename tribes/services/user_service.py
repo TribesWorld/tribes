@@ -8,7 +8,7 @@
     : copyright: (c) YEAR by v-zhidu.
     : license: LICENSE_NAME, see LICENSE_FILE
 """
-from flask import Blueprint, jsonify, make_response, request, current_app
+from flask import Blueprint, jsonify, make_response, request
 from dao import user_dao
 
 from common.error_handler import make_error
@@ -40,8 +40,38 @@ def put(user_id):
     if not _check_existed(user_id):
         return make_error(404, message='user not found')
 
-    current_app.logger.info(request.get_json())
-    reqargs = request.get_json()
-    user_dao.edit_user_name(user_id, reqargs['name'])
+    args = request.get_json()
+    user_dao.edit_user_name(user_id, args['name'])
 
     return make_response(get(user_id), 201)
+
+
+@users.route('/<user_id>', methods=['DELETE'])
+def delete(user_id):
+    """DELETE /users/<user_id>
+    根据用户id删除用户
+    """
+    if not _check_existed(user_id):
+        return make_error(404, message='user not found')
+    user_dao.delete_user_by_id(user_id)
+
+    return make_response('', 204)
+
+
+@users.route('/', methods=['GET'])
+def all_user():
+    """GET /users/
+    获取所有用户
+    """
+    return jsonify(user_dao.find_all())
+
+
+@users.route('', methods=['POST'])
+def post():
+    """POST /users/
+        新建用户
+    """
+    args = request.get_json()
+    # TODO(du_zhi_qiang@163.com): 新建需要返回主键.
+    user_dao.insert_user(args['name'])
+    return make_response('', 201)
