@@ -12,6 +12,7 @@ script:
 - cd tribes/
 
 notifications:
-  slack: tribesworld:dzHBgVIhNFNIzILqXHeswFgt
+  slack:
     rooms:
+      - tribesworld:dzHBgVIhNFNIzILqXHeswFgt
       - tribesworld:dzHBgVIhNFNIzILqXHeswFgt#tribes
