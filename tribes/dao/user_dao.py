@@ -21,7 +21,10 @@ def is_user_existed(user_id):
 def insert_user(name):
     """添加用户"""
     sql = "insert into t_user (name) values ('{0}')"
+    get_id_sql = "select MAX(id) from t_user"
+
     db_context.execute(sql, name)
+    return db_context.query_count(get_id_sql)
 
 
 def find_all():

@@ -73,5 +73,5 @@ def post():
     """
     args = request.get_json()
     # TODO(du_zhi_qiang@163.com): 新建需要返回主键.
-    user_dao.insert_user(args['name'])
-    return make_response('', 201)
+    user_id = user_dao.insert_user(args['name'])
+    return make_response(jsonify({'id': user_id}), 201)
