@@ -13,6 +13,5 @@ script:
 
 notifications:
   slack: tribesworld:dzHBgVIhNFNIzILqXHeswFgt
-    # rooms:
-    #   - tribesworld:dzHBgVIhNFNIzILqXHeswFgt#general
-    #   - tribesworld:dzHBgVIhNFNIzILqXHeswFgt#random
+    rooms:
+      - tribesworld:dzHBgVIhNFNIzILqXHeswFgt#tribes
