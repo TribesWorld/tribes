@@ -1,5 +1,1 @@
-# tribes
-
-## CI
-
-**develop** ![develop](https://travis-ci.org/TribesWorld/tribes.svg?branch=master)
+# tribes [![Build Status](https://travis-ci.org/TribesWorld/tribes.svg?branch=master)](https://travis-ci.org/TribesWorld/tribes)
