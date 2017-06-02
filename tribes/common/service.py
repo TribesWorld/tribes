@@ -68,7 +68,7 @@ class Service(object):
         @app.errorhandler(ValidationError)
         def validation_error(e):
             """参数验证异常,返回400错误"""
-            return make_error(400, description=e.args[0])
+            return make_error(400, message=e.args[0])
 
         @app.errorhandler(OperationalError)
         def database_error(e):
