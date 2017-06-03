@@ -23,7 +23,7 @@ db = SQLAlchemy()
 api = Api()
 
 
-class Service(object):
+class App(object):
     """服务抽象类, Flask抽象工厂"""
 
     def __init__(self, **kwargs):

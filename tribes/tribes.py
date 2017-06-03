@@ -9,11 +9,11 @@
     :license: LICENSE_NAME, see LICENSE_FILE
 """
 
-from common.service import Service
+from common.app import App
 from services import users
 
 
-class Tribes(Service):
+class Tribes(App):
     """
     Tribes类
 
