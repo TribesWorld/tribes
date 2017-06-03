@@ -3,7 +3,7 @@
     services.user.py
     ~~~~~~~~~~~~~~~~~~
 
-    A brief description goes here.
+    用户管理相关的所有接口.
 
     : copyright: (c) YEAR by v-zhidu.
     : license: LICENSE_NAME, see LICENSE_FILE
@@ -72,6 +72,6 @@ def post():
         新建用户
     """
     args = request.get_json()
-    # TODO(du_zhi_qiang@163.com): 新建需要返回主键.
+
     user_id = user_dao.insert_user(args['name'])
     return make_response(jsonify({'id': user_id}), 201)
