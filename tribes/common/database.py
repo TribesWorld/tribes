@@ -224,3 +224,23 @@ class Database(object):
         self._on_execute_sql_handler = callback
 
         return callback
+
+    def init_db(self, script_folder=None):
+        """初始化数据库"""
+        if script_folder is None:
+            return
+
+        def _read_file(file_path):
+            with open(file_path, 'r') as f:
+                return f.read()
+
+        def _file_generator(root_path):
+            import os
+
+            for file_name in os.listdir(root_path):
+                if os.path.splitext(file_name)[1] == '.sql':
+                    yield os.path.join(root_path, file_name)
+
+        self.begin_transaction()
+        for script in _file_generator(script_folder):
+            self._execute(_read_file(script))

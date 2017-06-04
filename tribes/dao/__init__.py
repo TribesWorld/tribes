@@ -8,7 +8,7 @@
     : copyright: (c) YEAR by v-zhidu.
     : license: LICENSE_NAME, see LICENSE_FILE
 """
-from common.service import db
+from common.app import db
 from common.database import Database
 from flask import current_app
 

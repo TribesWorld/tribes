@@ -55,6 +55,11 @@ class App(object):
             if 'SQLALCHEMY_DATABASE_URI' in app.config:
                 db.init_app(app)
                 db.app = app
+
+            if 'SCRIPT_FOLDER' in app.config:
+                from database import Database
+                db_context = Database(db)
+                db_context.init_db(app.config['SCRIPT_FOLDER'])
             else:
                 raise Exception(
                     'SQLALCHEMY_DATABASE_URI must be set in config.py')

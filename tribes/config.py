@@ -27,9 +27,10 @@ class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
+    SCRIPT_FOLDER = os.environ.get('SCRIPT_FOLDER')
     # 如需拆分数据库，则添加此配置项
-    AUTH_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
+    # AUTH_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
+    #     'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
 
 
 configuration = {
