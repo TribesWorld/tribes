@@ -29,7 +29,8 @@ _jwt = LocalProxy(lambda: current_app.extensions['jwt'])
 
 CONFIG_DEFAULTS = {
     'JWT_DEFAULT_REALM': 'Login Required',
-    'JWT_AUTH_URL_RULE': '/auth',
+    'JWT_AUTH_URL_RULE': '/auth/token',
+    'JWT_AUTH_REFRESH_URL_RULE': '/auth/refresh',
     'JWT_AUTH_ENDPOINT': 'jwt',
     'JWT_AUTH_USERNAME_KEY': 'username',
     'JWT_AUTH_PASSWORD_KEY': 'password',
@@ -37,6 +38,7 @@ CONFIG_DEFAULTS = {
     'JWT_LEEWAY': timedelta(seconds=10),
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
     'JWT_EXPIRATION_DELTA': timedelta(seconds=300),
+    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=30),
     'JWT_NOT_BEFORE_DELTA': timedelta(seconds=0),
     'JWT_VERIFY_CLAIMS': ['signature', 'exp', 'nbf', 'iat'],
     'JWT_REQUIRED_CLAIMS': ['exp', 'iat', 'nbf']
@@ -47,20 +49,23 @@ def _default_jwt_headers_handler(identity):
     return None
 
 
-def _default_jwt_payload_handler(identity):
+def _default_jwt_payload_handler(identity, is_refersh_token=False):
     iat = datetime.utcnow()
-    exp = iat + current_app.config.get('JWT_EXPIRATION_DELTA')
+    if not is_refersh_token:
+        exp = iat + current_app.config.get('JWT_EXPIRATION_DELTA')
+    else:
+        exp = iat + current_app.config.get('JWT_REFRESH_EXPIRATION_DELTA')
     nbf = iat + current_app.config.get('JWT_NOT_BEFORE_DELTA')
     identity = getattr(identity, 'id') or identity['id']
     return {'exp': exp, 'iat': iat, 'nbf': nbf, 'identity': identity}
 
 
-def _default_jwt_encode_handler(identity):
+def _default_jwt_encode_handler(identity, is_refersh_token=False):
     secret = current_app.config['JWT_SECRET_KEY']
     algorithm = current_app.config['JWT_ALGORITHM']
     required_claims = current_app.config['JWT_REQUIRED_CLAIMS']
 
-    payload = _jwt.jwt_payload_callback(identity)
+    payload = _jwt.jwt_payload_callback(identity, is_refersh_token)
     missing_claims = list(set(required_claims) - set(payload.keys()))
 
     if missing_claims:
@@ -125,15 +130,48 @@ def _default_auth_request_handler():
 
     if identity:
         access_token = _jwt.jwt_encode_callback(identity)
-        refresh_token = _jwt.jwt_encode_callback(identity)
+        refresh_token = _jwt.jwt_encode_callback(identity, True)
         return _jwt.auth_response_callback(access_token, refresh_token, identity)
     else:
         raise JWTError('Bad Request', 'Invalid credentials')
 
 
+def _default_auth_refresh_handler():
+    data = request.get_json()
+    # username = data.get(current_app.config.get('JWT_AUTH_USERNAME_KEY'), None)
+    # password = data.get(current_app.config.get('JWT_AUTH_PASSWORD_KEY'), None)
+    # criterion = [username, password, len(data) == 2]
+
+    # if not all(criterion):
+    #     raise JWTError('Bad Request', 'Invalid credentials')
+
+    # identity = _jwt.authentication_callback(username, password)
+    token = data.get('refresh_token', None)
+
+    try:
+        payload = _jwt.jwt_decode_callback(token)
+    except jwt.InvalidTokenError as e:
+        raise JWTError('Invalid token', str(e))
+
+    _request_ctx_stack.top.current_identity = identity = _jwt.identity_callback(
+        payload)
+
+    if identity is None:
+        raise JWTError('Invalid JWT', 'User does not exist')
+
+    if identity:
+        access_token = _jwt.jwt_encode_callback(identity)
+        return _jwt.auth_response_callback(access_token, None, identity)
+    else:
+        raise JWTError('Bad Request', 'Invalid credentials')
+
+
 def _default_auth_response_handler(access_token, refresh_token=None, identity=None):
-    return jsonify({'access_token': access_token.decode('utf-8'),
-                    'refresh_token': refresh_token.decode('utf-8')})
+    if refresh_token:
+        return jsonify({'access_token': access_token.decode('utf-8'),
+                        'refresh_token': refresh_token.decode('utf-8')})
+    else:
+        return jsonify({'access_token': access_token.decode('utf-8')})
 
 
 def _default_jwt_error_handler(error):
@@ -210,6 +248,7 @@ class JWT(object):
 
         self.auth_response_callback = _default_auth_response_handler
         self.auth_request_callback = _default_auth_request_handler
+        self.auth_refresh_callback = _default_auth_refresh_handler
         self.jwt_encode_callback = _default_jwt_encode_handler
         self.jwt_decode_callback = _default_jwt_decode_handler
         self.jwt_headers_callback = _default_jwt_headers_handler
@@ -226,6 +265,8 @@ class JWT(object):
         app.config.setdefault('JWT_SECRET_KEY', app.config['SECRET_KEY'])
 
         auth_url_rule = app.config.get('JWT_AUTH_URL_RULE', None)
+        auth_refresh_url_rule = app.config.get(
+            'JWT_AUTH_REFRESH_URL_RULE', None)
 
         if auth_url_rule:
             if self.auth_request_callback == _default_auth_request_handler:
@@ -238,6 +279,18 @@ class JWT(object):
             auth_url_options.setdefault(
                 'view_func', self.auth_request_callback)
             app.add_url_rule(auth_url_rule, **auth_url_options)
+
+        if auth_refresh_url_rule:
+            if self.auth_refresh_callback == _default_auth_refresh_handler:
+                assert self.auth_refresh_callback is not None, (
+                    'an authentication_handler function must be defined when using the built in '
+                    'authentication resource')
+
+            auth_url_options = app.config.get(
+                'JWT_AUTH_URL_OPTIONS', {'methods': ['POST']})
+            auth_url_options.setdefault(
+                'view_func', self.auth_refresh_callback)
+            app.add_url_rule(auth_refresh_url_rule, **auth_url_options)
 
         app.errorhandler(JWTError)(self._jwt_error_callback)
 
@@ -310,6 +363,10 @@ class JWT(object):
                       "setting JWT_AUTH_URL_RULE=None and registering your own authentication "
                       "resource directly on your application.", DeprecationWarning, stacklevel=2)
         self.auth_request_callback = callback
+        return callback
+
+    def auth_refresh_handler(self, callback):
+        self.auth_refresh_callback = callback
         return callback
 
     def request_handler(self, callback):
