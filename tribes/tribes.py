@@ -10,7 +10,7 @@
 """
 
 from common.app import App
-from services import users
+from services import users, auth
 
 
 class Tribes(App):
@@ -26,6 +26,7 @@ class Tribes(App):
     def register_component(self, app, **kwargs):
         """覆盖common.service模块中的默认注册方法，组合项目中不同的服务
         """
+
         super(Tribes, self).register_component(app, **kwargs)
 
 
@@ -34,3 +35,4 @@ class Tribes(App):
 app = Tribes(use_db=True).instance
 
 app.register_blueprint(users)
+app.register_blueprint(auth)

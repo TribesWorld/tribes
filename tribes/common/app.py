@@ -14,13 +14,13 @@ from __future__ import unicode_literals
 from abc import abstractmethod
 
 from flask import Flask
-from flask_restful import Api
+from authenticate import JWT
 from flask_sqlalchemy import SQLAlchemy
 
 from config import configuration
 
 db = SQLAlchemy()
-api = Api()
+jwt = JWT()
 
 
 class App(object):
@@ -46,9 +46,9 @@ class App(object):
         """抽象方法，用于在Flask中注册蓝图和扩展"""
 
         # 选择是否开启RESTApi
-        if kwargs.get('restful', True):
-            app.logger.info('loading restful extension...')
-            api.init_app(app)
+        if kwargs.get('oauth', True) is True:
+            app.logger.info('loading JWT extension...')
+            jwt.init_app(app)
         # 加载数据库
         if kwargs.get('use_db', False) is True:
             app.logger.info('loading database extension...')

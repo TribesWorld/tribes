@@ -9,9 +9,10 @@
     : license: LICENSE_NAME, see LICENSE_FILE
 """
 from flask import Blueprint, jsonify, make_response, request
-from dao import user_dao
+from common.authenticate import jwt_required, current_identity
 
 from common.error_handler import make_error
+from dao import user_dao
 
 users = Blueprint('users', __name__, url_prefix='/users')
 
@@ -59,6 +60,7 @@ def delete(user_id):
 
 
 @users.route('/', methods=['GET'])
+@jwt_required()
 def all_user():
     """GET /users/
     获取所有用户
@@ -75,3 +77,13 @@ def post():
 
     user_id = user_dao.insert_user(args['name'])
     return make_response(jsonify({'id': user_id}), 201)
+
+
+@users.route('/current/1', methods=['GET'])
+@jwt_required()
+def current_user():
+    """GET /user/current/
+    获取当前用户
+    """
+    a = current_identity
+    return jsonify(current_identity)
