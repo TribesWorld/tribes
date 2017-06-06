@@ -75,7 +75,7 @@ def post():
     """
     args = request.get_json()
 
-    user_id = user_dao.insert_user(args['name'])
+    user_id = user_dao.insert_user(args['name'], args['password'])
     return make_response(jsonify({'id': user_id}), 201)
 
 
@@ -85,5 +85,4 @@ def current_user():
     """GET /user/current/
     获取当前用户
     """
-    a = current_identity
-    return jsonify(current_identity)
+    return jsonify(dict(current_identity))

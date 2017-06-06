@@ -18,13 +18,14 @@ def is_user_existed(user_id):
     return db_context.query_count(sql, user_id) == 1
 
 
-def insert_user(name):
+def insert_user(account_name, password_hash):
     """添加用户"""
-    sql = "insert into t_user (name) values ('{0}')"
+    sql = "insert into t_user (account_name, password_hash) \
+        values ('{0}', '{1}')"
     get_id_sql = "select MAX(id) from t_user"
 
     db_context.begin_transaction()
-    db_context.execute(sql, name)
+    db_context.execute(sql, account_name, password_hash)
 
     return db_context.query_count(get_id_sql)
 
@@ -41,10 +42,16 @@ def find_user_by_id(user_id):
     return db_context.query_one(sql, user_id)
 
 
-def edit_user_name(user_id, name):
+def find_user_by_login_name(account_name):
+    """根据用户登录名称查找"""
+    sql = "select * from t_user where account_name='{0}'"
+    return db_context.query_one(sql, account_name)
+
+
+def edit_user_name(user_id, account_name):
     """根据id修改用户姓名"""
-    sql = "update t_user set name='{0}' where id={1}"
-    return db_context.execute(sql, name, user_id)
+    sql = "update t_user set account_name='{0}' where id={1}"
+    return db_context.execute(sql, account_name, user_id)
 
 
 def delete_user_by_id(user_id):

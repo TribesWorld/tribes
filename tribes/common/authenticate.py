@@ -53,11 +53,13 @@ def _default_jwt_payload_handler(identity, is_refersh_token=False):
     iat = datetime.utcnow()
     if not is_refersh_token:
         exp = iat + current_app.config.get('JWT_EXPIRATION_DELTA')
+        tok = 'access_token'
     else:
         exp = iat + current_app.config.get('JWT_REFRESH_EXPIRATION_DELTA')
+        tok = 'refresh_token'
     nbf = iat + current_app.config.get('JWT_NOT_BEFORE_DELTA')
-    identity = getattr(identity, 'id') or identity['id']
-    return {'exp': exp, 'iat': iat, 'nbf': nbf, 'identity': identity}
+    # identity = identity['id'] or getattr(identity, 'id')
+    return {'exp': exp, 'iat': iat, 'nbf': nbf, 'tok': tok, 'identity': identity}
 
 
 def _default_jwt_encode_handler(identity, is_refersh_token=False):
@@ -138,14 +140,6 @@ def _default_auth_request_handler():
 
 def _default_auth_refresh_handler():
     data = request.get_json()
-    # username = data.get(current_app.config.get('JWT_AUTH_USERNAME_KEY'), None)
-    # password = data.get(current_app.config.get('JWT_AUTH_PASSWORD_KEY'), None)
-    # criterion = [username, password, len(data) == 2]
-
-    # if not all(criterion):
-    #     raise JWTError('Bad Request', 'Invalid credentials')
-
-    # identity = _jwt.authentication_callback(username, password)
     token = data.get('refresh_token', None)
 
     try:
@@ -198,6 +192,9 @@ def _jwt_required(realm):
 
     try:
         payload = _jwt.jwt_decode_callback(token)
+        if payload['tok'] == 'refresh_token':
+            raise JWTError('Invalid token',
+                           'refresh token can not be used to access resource.')
     except jwt.InvalidTokenError as e:
         raise JWTError('Invalid token', str(e))
 
