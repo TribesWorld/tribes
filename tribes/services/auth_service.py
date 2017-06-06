@@ -20,8 +20,9 @@ auth = Blueprint('auth', __name__, url_prefix='/auth')
 @jwt.authentication_handler
 def authenticate(username, password):
     """身份认证方法"""
+    from common.utils import verify_password
     user = user_dao.find_user_by_login_name(username)
-    if user and safe_str_cmp(user['password_hash'].encode('utf-8'), password.encode('utf-8')):
+    if user and verify_password(password, user['password_hash']):
         return {
             'id': user['id'],
             'account_name': user['account_name']

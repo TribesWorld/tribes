@@ -58,7 +58,7 @@ def _default_jwt_payload_handler(identity, is_refersh_token=False):
         exp = iat + current_app.config.get('JWT_REFRESH_EXPIRATION_DELTA')
         tok = 'refresh_token'
     nbf = iat + current_app.config.get('JWT_NOT_BEFORE_DELTA')
-    # identity = identity['id'] or getattr(identity, 'id')
+
     return {'exp': exp, 'iat': iat, 'nbf': nbf, 'tok': tok, 'identity': identity}
 
 

@@ -73,9 +73,11 @@ def post():
     """POST /users/
         新建用户
     """
+    from common.utils import encode_password
     args = request.get_json()
 
-    user_id = user_dao.insert_user(args['name'], args['password'])
+    user_id = user_dao.insert_user(
+        args['name'], encode_password(args['password']))
     return make_response(jsonify({'id': user_id}), 201)
 
 

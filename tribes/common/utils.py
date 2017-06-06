@@ -33,3 +33,17 @@ def initialize_class(data, **kwargs):
         Class = import_module(data)
 
         return Class(**kwargs)
+
+
+def encode_password(password):
+    """计算密码散列"""
+    from werkzeug.security import generate_password_hash
+
+    return generate_password_hash(password)
+
+
+def verify_password(password, password_hash):
+    """验证密码正确性"""
+    from werkzeug.security import check_password_hash
+
+    return check_password_hash(password_hash, password)
