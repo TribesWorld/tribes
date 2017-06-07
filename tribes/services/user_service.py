@@ -63,7 +63,7 @@ def delete(user_id):
 
 
 @users.route('/', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def all_user():
     """GET /users/
     获取所有用户

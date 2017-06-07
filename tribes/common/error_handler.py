@@ -9,7 +9,6 @@
     : license: LICENSE_NAME, see LICENSE_FILE
 """
 from flask import make_response, jsonify
-from flask_restful import abort
 
 
 def make_error(staue_code, message, description=''):
@@ -20,5 +19,6 @@ def make_error(staue_code, message, description=''):
 
 def make_api_error(staue_code, description):
     """创建api方法的错误"""
+    from flask_restful import abort
     result = {'description': description, 'message': ''}
     abort(staue_code, **result)
