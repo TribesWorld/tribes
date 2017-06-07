@@ -5,4 +5,4 @@ export SCRIPT_FOLDER=${PWD}/tribes/script/
 export FLASK_APP=${PWD}/tribes/tribes.py
 
 cd tribes/
-gunicorn -w 2 -b 0.0.0.0:5000 tribes:app
+gunicorn -w 2 -b 0.0.0.0:5001 tribes:app
