@@ -47,6 +47,12 @@ def error_handler(error):
     ])), error.status_code, error.headers
 
 
+@auth.route('/verify_email/<email>', methods=['GET'])
+def verify_email(email):
+    """验证邮箱是否有效"""
+    return make_response(jsonify({'is_valid': user_dao.is_email_existed(email)}), 200)
+
+
 @auth.route('/signup', methods=['POST'])
 def sign_up():
     """注册新用户"""

@@ -18,6 +18,13 @@ def is_user_existed(user_id):
     return db_context.query_count(sql, user_id) == 1
 
 
+def is_email_existed(email):
+    """检查email是否存在"""
+    sql = "select count(*) from t_user where email='{0}'"
+
+    return db_context.query_count(sql, email) == 1
+
+
 def insert_user(account_name, password_hash, email):
     """添加用户"""
     sql = "insert into t_user (account_name, password_hash, email) \

@@ -29,3 +29,9 @@ Content-Type: application/json
     "name": "v-zhidu",
     "password": "12345"
 }
+
+###
+
+# 验证邮箱有否有效
+
+GET http://{{host}}/auth/verify_email/du_zhi_qiang@126.com
