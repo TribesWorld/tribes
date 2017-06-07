@@ -16,3 +16,16 @@ Content-Type: application/json
 {
     "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGl0eSI6eyJwYXNzd29yZF9oYXNoIjoiMTIzNDUiLCJpZCI6MSwiYWNjb3VudF9uYW1lIjoidi16aGlkdSJ9LCJpYXQiOjE0OTY3MTgxNDQsIm5iZiI6MTQ5NjcxODE0NCwiZXhwIjoxNDk5MzEwMTQ0fQ.7yhrKJ_yqsapOzFcH_KYV-0TC6WpU_W2AOzmjpSoE8Y"
 }
+
+###
+
+# 添加新用户
+
+POST http://{{host}}/auth/signup
+Content-Type: application/json
+
+{
+    "email": "du_zhi_qiang@163.com",
+    "name": "v-zhidu",
+    "password": "12345"
+}

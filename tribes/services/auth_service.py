@@ -8,8 +8,7 @@
     : copyright: (c) YEAR by v-zhidu.
     : license: LICENSE_NAME, see LICENSE_FILE
 """
-from flask import Blueprint, jsonify
-from werkzeug.security import safe_str_cmp
+from flask import Blueprint, jsonify, request, make_response
 
 from common.app import jwt
 from dao import user_dao
@@ -25,20 +24,36 @@ def authenticate(username, password):
     if user and verify_password(password, user['password_hash']):
         return {
             'id': user['id'],
-            'account_name': user['account_name']
+            'account_name': user['account_name'],
+            'email': user['email'],
+            'status': user['status']
         }
 
 
 @jwt.identity_handler
 def identity(payload):
+    """返回当前用户身份信息"""
     user = payload['identity']
     return user
 
 
 @jwt.jwt_error_handler
 def error_handler(error):
+    """身份认证异常处理"""
     from collections import OrderedDict
     return jsonify(OrderedDict([
         ('message', error.error),
         ('description', error.description),
     ])), error.status_code, error.headers
+
+
+@auth.route('/signup', methods=['POST'])
+def sign_up():
+    """注册新用户"""
+    from common.utils import encode_password
+    args = request.get_json()
+
+    user_id = user_dao.insert_user(
+        args['name'], encode_password(args['password']), args['email'])
+
+    return make_response(jsonify({'id': user_id}), 201)

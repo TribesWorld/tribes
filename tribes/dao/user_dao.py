@@ -18,14 +18,14 @@ def is_user_existed(user_id):
     return db_context.query_count(sql, user_id) == 1
 
 
-def insert_user(account_name, password_hash):
+def insert_user(account_name, password_hash, email):
     """添加用户"""
-    sql = "insert into t_user (account_name, password_hash) \
-        values ('{0}', '{1}')"
+    sql = "insert into t_user (account_name, password_hash, email) \
+        values ('{0}', '{1}', '{2}')"
     get_id_sql = "select MAX(id) from t_user"
 
     db_context.begin_transaction()
-    db_context.execute(sql, account_name, password_hash)
+    db_context.execute(sql, account_name, password_hash, email)
 
     return db_context.query_count(get_id_sql)
 

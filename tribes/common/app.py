@@ -79,3 +79,8 @@ class App(object):
         def database_error(e):
             """数据库操作异常"""
             return make_error(500, e.args[0])
+
+        @app.errorhandler(405)
+        def method_not_allowed(e):
+            """请求方法错误"""
+            return make_error(405, 'Method Not Allowed')

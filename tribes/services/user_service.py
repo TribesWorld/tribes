@@ -9,7 +9,7 @@
     : license: LICENSE_NAME, see LICENSE_FILE
 """
 from flask import Blueprint, jsonify, make_response, request
-from common.authenticate import jwt_required, current_identity
+from common.authenticate import jwt_required
 
 from common.error_handler import make_error
 from dao import user_dao
@@ -22,6 +22,7 @@ def _check_existed(user_id):
 
 
 @users.route('/<user_id>', methods=['GET'])
+@jwt_required()
 def get(user_id):
     """GET ／users/<user-id>
     根据用户id查找用户基本信息
@@ -34,6 +35,7 @@ def get(user_id):
 
 
 @users.route('/<user_id>', methods=['PUT'])
+@jwt_required()
 def put(user_id):
     """PUT /users/<user_id>
         根据id更新用户信息
@@ -48,6 +50,7 @@ def put(user_id):
 
 
 @users.route('/<user_id>', methods=['DELETE'])
+@jwt_required()
 def delete(user_id):
     """DELETE /users/<user_id>
     根据用户id删除用户
@@ -66,25 +69,3 @@ def all_user():
     获取所有用户
     """
     return jsonify(user_dao.find_all())
-
-
-@users.route('', methods=['POST'])
-def post():
-    """POST /users/
-        新建用户
-    """
-    from common.utils import encode_password
-    args = request.get_json()
-
-    user_id = user_dao.insert_user(
-        args['name'], encode_password(args['password']))
-    return make_response(jsonify({'id': user_id}), 201)
-
-
-@users.route('/current/1', methods=['GET'])
-@jwt_required()
-def current_user():
-    """GET /user/current/
-    获取当前用户
-    """
-    return jsonify(dict(current_identity))
