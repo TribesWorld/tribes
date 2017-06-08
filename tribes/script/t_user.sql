@@ -1,4 +1,3 @@
-# Table Structure
 CREATE TABLE IF NOT EXISTS t_user (
   id            INT(11) PRIMARY KEY AUTO_INCREMENT         NOT NULL
   COMMENT '用户id',
@@ -14,10 +13,4 @@ CREATE TABLE IF NOT EXISTS t_user (
   COMMENT '创建时间',
   utime         TIMESTAMP DEFAULT current_timestamp ON UPDATE current_timestamp
   COMMENT '更新时间'
-  # display_name VARCHAR(64) NOT NULL COMMENT '显示名称',
-  # avatar_url VARCHAR(128) NOT NULL COMMENT '头像链接',
-  # email VARCHAR(64) NOT NULL COMMENT '邮箱',
-  # password VARCHAR(128) NOT NULL COMMENT '登录密码加密字符串'
 )
-  ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;

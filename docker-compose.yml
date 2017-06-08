@@ -1,0 +1,20 @@
+version: '3'
+services:
+  db:
+    image: mysql
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: tribes
+      MYSQL_ROOT_PASSWORD: root_tribes
+      MYSQL_DATABASE: tribes
+
+  api:
+      depends_on:
+        - db
+      image: tribeswiki/api
+      environment:
+        DEV_DATABASE_URL: mysql://root:root_tribes@db:3306/tribes
+      ports:
+        - "5000:5000"
+      links:
+        - db
