@@ -62,4 +62,7 @@ def sign_up():
     user_id = user_dao.insert_user(
         args['name'], encode_password(args['password']), args['email'])
 
+    from services.mail_service import send_verify_email
+
+    send_verify_email(args['name'], args['email'])
     return make_response(jsonify({'id': user_id}), 201)

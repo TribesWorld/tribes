@@ -32,6 +32,19 @@ class DevelopmentConfig(Config):
     # AUTH_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
     #     'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
 
+    # 邮件服务配置
+    MAIL_SERVER = 'smtp.163.com'
+    # MAIL_PORT: default 25
+    # MAIL_USE_TLS: default False
+    # MAIL_USE_SSL: default False
+    # MAIL_DEBUG: default app.debug
+    MAIL_USERNAME = 'du_zhi_qiang@163.com'
+    MAIL_PASSWORD = 'DU5573574'
+    MAIL_DEFAULT_SENDER = 'du_zhi_qiang@163.com'
+    # MAIL_MAX_EMAILS: default None
+    # MAIL_SUPPRESS_SEND: default app.testing
+    # MAIL_ASCII_ATTACHMENTS: default False
+
 
 configuration = {
     'development': DevelopmentConfig,

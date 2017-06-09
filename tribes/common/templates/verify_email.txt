@@ -1,0 +1,9 @@
+Dear {{name}},
+
+Here is your verfiy link.
+
+{{verify_link}}
+
+Regards,
+
+The Tribes Group

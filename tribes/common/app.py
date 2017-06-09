@@ -12,15 +12,17 @@
 from __future__ import unicode_literals
 
 from abc import abstractmethod
+from config import configuration
 
 from flask import Flask
-from authenticate import JWT
+from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 
-from config import configuration
+from authenticate import JWT
 
 db = SQLAlchemy()
 jwt = JWT()
+mail = Mail()
 
 
 class App(object):
@@ -45,13 +47,17 @@ class App(object):
     def register_component(self, app, **kwargs):
         """抽象方法，用于在Flask中注册蓝图和扩展"""
 
-        # 选择是否开启RESTApi
-        if kwargs.get('oauth', True) is True:
-            app.logger.info('loading JWT extension...')
-            jwt.init_app(app)
+        # 选择是否开启JWT
+        if kwargs.get('jwt', True) is True:
+            app.logger.debug('loading JWT extension...')
+            mail.init_app(app)
+
+        # 选择是否开启mail
+        if kwargs.get('mail', 'True') is True:
+            app.logger.debug('loading mail extension...')
         # 加载数据库
         if kwargs.get('use_db', False) is True:
-            app.logger.info('loading database extension...')
+            app.logger.debug('loading database extension...')
             if 'SQLALCHEMY_DATABASE_URI' in app.config:
                 db.init_app(app)
                 db.app = app

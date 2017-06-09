@@ -68,4 +68,7 @@ def all_user():
     """GET /users/
     获取所有用户
     """
+    from mail_service import send_verify_email
+
+    send_verify_email('du_zhi_qiang@163.com')
     return jsonify(user_dao.find_all())
