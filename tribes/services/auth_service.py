@@ -11,6 +11,7 @@
 from flask import Blueprint, jsonify, request, make_response
 
 from common.app import jwt
+from common.error_handler import make_error
 from dao import user_dao
 
 auth = Blueprint('auth', __name__, url_prefix='/auth')
@@ -59,6 +60,9 @@ def sign_up():
     from common.utils import encode_password
     args = request.get_json()
 
+    # 检查用户邮箱是否存在
+    if user_dao.is_email_existed(args['email']):
+        return make_error(202, message='email already existed.')
     user_id = user_dao.insert_user(
         args['name'], encode_password(args['password']), args['email'])
 
