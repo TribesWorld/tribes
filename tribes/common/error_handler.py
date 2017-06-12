@@ -15,10 +15,3 @@ def make_error(staue_code, message, description=''):
     """创建视图方法的错误"""
     result = {'message': message, 'description': description}
     return make_response(jsonify(result), staue_code)
-
-
-def make_api_error(staue_code, description):
-    """创建api方法的错误"""
-    from flask_restful import abort
-    result = {'description': description, 'message': ''}
-    abort(staue_code, **result)
