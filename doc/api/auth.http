@@ -25,9 +25,10 @@ POST http://{{host}}/auth/signup
 Content-Type: application/json
 
 {
-    "email": "shimao1023@outlook.com",
+    "email": "du_zhi_qiang@163.com",
     "name": "s",
-    "password": "12345"
+    "password": "12345",
+    "avatar": "http://example.url.com"
 }
 
 ###

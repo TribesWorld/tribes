@@ -25,21 +25,21 @@ def is_email_existed(email):
     return db_context.query_count(sql, email) == 1
 
 
-def insert_user(account_name, password_hash, email):
+def insert_user(account_name, password_hash, email, avatar):
     """添加用户"""
-    sql = "insert into t_user (account_name, password_hash, email) \
-        values ('{0}', '{1}', '{2}')"
+    sql = "insert into t_user (account_name, password_hash, email, avatar_url) \
+        values ('{0}', '{1}', '{2}', '{3}')"
     get_id_sql = "select MAX(id) from t_user"
 
     db_context.begin_transaction()
-    db_context.execute(sql, account_name, password_hash, email)
+    db_context.execute(sql, account_name, password_hash, email, avatar)
 
     return db_context.query_count(get_id_sql)
 
 
 def find_all():
     """根据用户id查找用户"""
-    sql = 'select * from t_user'
+    sql = 'select id, account_name, email, status from t_user'
     return db_context.query(sql)
 
 

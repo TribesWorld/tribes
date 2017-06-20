@@ -64,7 +64,7 @@ def sign_up():
     if user_dao.is_email_existed(args['email']):
         return make_error(202, message='email already existed.')
     user_id = user_dao.insert_user(
-        args['name'], encode_password(args['password']), args['email'])
+        args['name'], encode_password(args['password']), args['email'], args['avatar'])
 
     from services.mail_service import send_verify_email
 
