@@ -243,4 +243,6 @@ class Database(object):
 
         self.begin_transaction()
         for script in _file_generator(script_folder):
-            self._execute(_read_file(script))
+            sql = _read_file(script)
+            if sql:
+                self._execute(sql)

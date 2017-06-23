@@ -17,9 +17,8 @@ mail = Email(mail)
 ADMIN_EMAIL = current_app.config.get('MAIL_DEFAULT_SENDER')
 
 
-def send_verify_email(username, email):
+def send_verify_email(username, email, callback_url):
     """验证用户邮箱"""
     subject = 'Tribes - 用户验证邮件'
-    verify_link = 'http://text.com'
     mail.send_email(subject, ADMIN_EMAIL, [email], text_body=render_template(
-        'verify_email.txt', name=username, verify_link=verify_link))
+        'verify_email.txt', name=username, verify_link=callback_url))

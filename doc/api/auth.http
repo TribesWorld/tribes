@@ -26,9 +26,9 @@ Content-Type: application/json
 
 {
     "email": "du_zhi_qiang@163.com",
-    "name": "s",
+    "name": "v-zhidu",
     "password": "12345",
-    "avatar": "http://example.url.com"
+    "callback_url": "http://example.url.com"
 }
 
 ###

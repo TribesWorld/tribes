@@ -47,3 +47,8 @@ def verify_password(password, password_hash):
     from werkzeug.security import check_password_hash
 
     return check_password_hash(password_hash, password)
+
+
+def generate_avatar():
+    """生成默认头像地址"""
+    return "test_url"

@@ -12,6 +12,7 @@ from flask import Blueprint, jsonify, request, make_response
 
 from common.app import jwt
 from common.error_handler import make_error
+from common.utils import generate_avatar
 from dao import user_dao
 
 auth = Blueprint('auth', __name__, url_prefix='/auth')
@@ -63,10 +64,12 @@ def sign_up():
     # 检查用户邮箱是否存在
     if user_dao.is_email_existed(args['email']):
         return make_error(202, message='email already existed.')
+
+    avartar_url = generate_avatar()
     user_id = user_dao.insert_user(
-        args['name'], encode_password(args['password']), args['email'], args['avatar'])
+        args['name'], encode_password(args['password']), args['email'], avartar_url)
 
     from services.mail_service import send_verify_email
 
-    send_verify_email(args['name'], args['email'])
+    send_verify_email(args['name'], args['email'], args['callback_url'])
     return make_response(jsonify({'id': user_id}), 201)
