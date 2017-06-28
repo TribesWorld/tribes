@@ -8,14 +8,14 @@
     : copyright: (c) YEAR by v-zhidu.
     : license: LICENSE_NAME, see LICENSE_FILE
 """
-from flask import Blueprint, jsonify, request, make_response
+from flask import Blueprint, jsonify, make_response, request
 
 from common.app import jwt
 from common.error_handler import make_error
 from common.utils import generate_avatar
-from dao import user_dao
+from dao import db_context, user_dao
 
-auth = Blueprint('auth', __name__, url_prefix='/auth')
+auth = Blueprint('auth', __name__, url_prefix='/api/auth')
 
 
 @jwt.authentication_handler
@@ -55,21 +55,35 @@ def verify_email(email):
     return make_response(jsonify({'is_valid': user_dao.is_email_existed(email)}), 200)
 
 
+@auth.route('/active_account/<active_code>', methods=['GET'])
+def active_account(active_code):
+    """账号激活接口
+    active_code 加密激活码需解码为用户邮箱，回调地址
+    """
+    pass
+
+
 @auth.route('/signup', methods=['POST'])
-def sign_up():
+def sign_up(conn):
     """注册新用户"""
     from common.utils import encode_password
     args = request.get_json()
 
+    db_context.begin_transaction()
     # 检查用户邮箱是否存在
     if user_dao.is_email_existed(args['email']):
         return make_error(202, message='email already existed.')
 
-    avartar_url = generate_avatar()
-    user_id = user_dao.insert_user(
-        args['name'], encode_password(args['password']), args['email'], avartar_url)
+    try:
+        avartar_url = generate_avatar()
+        user_id = user_dao.insert_user(args['name'], encode_password(
+            args['password']), args['email'], avartar_url)
 
-    from services.mail_service import send_verify_email
+        from services.mail_service import send_verify_email
 
-    send_verify_email(args['name'], args['email'], args['callback_url'])
-    return make_response(jsonify({'id': user_id}), 201)
+        send_verify_email(args['name'], args['email'], args['callback_url'])
+        return make_response(jsonify({'id': user_id}), 201)
+    except UnicodeDecodeError:
+        db_context.abort_transaction()
+    else:
+        db_context.end_transaction()

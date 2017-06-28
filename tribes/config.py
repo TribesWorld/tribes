@@ -15,7 +15,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
     """默认配置"""
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'This is a key123'
     SSL_DISABLE = True
 
     def __init__(self):
@@ -25,6 +25,7 @@ class Config(object):
 class DevelopmentConfig(Config):
     """开发环境配置"""
     DEBUG = True
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
     SCRIPT_FOLDER = os.environ.get('SCRIPT_FOLDER')

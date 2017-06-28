@@ -12,7 +12,34 @@ from enum import Enum
 from flask_sqlalchemy import SQLAlchemy
 
 
-# @unique
+def database(datasource, with_transaction=False):
+    """数据库支持db"""
+    if with_transaction:
+        def _db(func):
+            def wrapper(*args, **kwargs):
+                try:
+                    datasource.begin_transaction()
+                    return func(*args, **kwargs)
+                except Exception as ex:
+                    datasource.abort_transaction()
+                    raise ex
+                else:
+                    datasource.end_transaction()
+            return wrapper
+    else:
+        def _db(func):
+            def wrapper(*args, **kwargs):
+                try:
+                    datasource.connect()
+                    return func(*args, **kwargs)
+                except Exception as ex:
+                    raise ex
+                finally:
+                    datasource.close()
+            return wrapper
+    return _db
+
+
 class ConnectState(Enum):
     """
     数据库连接状态枚举值
@@ -78,28 +105,22 @@ class Database(object):
     def _execute(self, sql, *args):
         """执行sql语句"""
         try:
-            self._before_connect_handler()
-            self._connect()
+            if not self._conn_state == ConnectState.OPENED:
+                raise 'database connection is closed.'
 
             sql = format_sql(sql, *args)
             self._on_execute_sql_handler(sql)
 
             result = self._conn.execute(sql)
-
-            self.end_transaction()
             return result
         except Exception as ex:
             self._across_error_handler(ex)
-            self.abort_transaction()
             raise ex
-        finally:
-            self._close()
-            self._after_connect_handler()
 
     def begin_transaction(self):
         """开启事务支持"""
         self._before_transcation_handler()
-        self._connect()
+        self.connect()
         self._trans = self._conn.begin()
 
     def abort_transaction(self):
@@ -139,13 +160,6 @@ class Database(object):
         else:
             return None
 
-    def _connect(self):
-        """开启数据库连接"""
-        # self._conn = self._db.engine.connect()
-        if not self._conn_state == ConnectState.OPENED:
-            self._conn = self._db.engine.connect()
-            self._conn_state = ConnectState.OPENED
-
     def process_result(self, result):
         """
         : param ResultProxy
@@ -161,10 +175,18 @@ class Database(object):
 
         return lis
 
-    def _close(self):
+    def connect(self):
+        """开启数据库连接"""
+        if not self._conn_state == ConnectState.OPENED:
+            self._conn = self._db.engine.connect()
+            self._before_connect_handler()
+            self._conn_state = ConnectState.OPENED
+
+    def close(self):
         """关闭数据库连接"""
         if self._conn_state == ConnectState.OPENED:
             self._conn.close()
+            self._after_connect_handler()
             self._conn_state = ConnectState.CLOSE
 
     def before_connect(self, callback):

@@ -18,7 +18,8 @@ from flask import Flask
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 
-from authenticate import JWT
+from common.authenticate import JWT
+from common.errors import add_global_errors
 
 db = SQLAlchemy()
 jwt = JWT()
@@ -31,8 +32,8 @@ class App(object):
     def __init__(self, **kwargs):
         self._instance = Flask(__name__)
         self._config_instance(self._instance, **kwargs)
-        self.register_component(self._instance, **kwargs)
         self.error_handler(self._instance)
+        self.register_component(self._instance, **kwargs)
 
     def _config_instance(self, app, **kwargs):
         config_name = kwargs.get('config_name', 'default')
@@ -42,6 +43,11 @@ class App(object):
     def instance(self):
         """开放给外部访问Flask实例的权限"""
         return self._instance
+
+    @abstractmethod
+    def error_handler(self, app):
+        """配置异常处理方法"""
+        add_global_errors(app)
 
     @abstractmethod
     def register_component(self, app, **kwargs):
@@ -69,24 +75,3 @@ class App(object):
             else:
                 raise Exception(
                     'SQLALCHEMY_DATABASE_URI must be set in config.py')
-
-    def error_handler(self, app):
-        """全局的异常处理方法"""
-        from error_handler import make_error
-        from common.exceptions import ValidationError
-        from sqlalchemy.exc import OperationalError
-
-        @app.errorhandler(ValidationError)
-        def validation_error(e):
-            """参数验证异常,返回400错误"""
-            return make_error(400, message=e.args[0])
-
-        @app.errorhandler(OperationalError)
-        def database_error(e):
-            """数据库操作异常"""
-            return make_error(500, e.args[0])
-
-        @app.errorhandler(405)
-        def method_not_allowed(e):
-            """请求方法错误"""
-            return make_error(405, 'Method Not Allowed')

@@ -21,7 +21,7 @@ Content-Type: application/json
 
 # 添加新用户
 
-POST http://{{host}}/auth/signup
+POST http://{{host}}/api/auth/signup
 Content-Type: application/json
 
 {

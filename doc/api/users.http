@@ -1,5 +1,5 @@
 # 获取所有用户
-GET http://{{host}}/users
+GET http://{{host}}/api/user
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGl0eSI6MSwiaWF0IjoxNDk2NzE3NTI2LCJuYmYiOjE0OTY3MTc1MjYsImV4cCI6MTQ5NjcxNzgyNn0.jw78TAfgWu5RQ61oMbhHDCKe8shIRC1DTyWZe30Fwxw
 
 ###

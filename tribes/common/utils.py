@@ -52,3 +52,19 @@ def verify_password(password, password_hash):
 def generate_avatar():
     """生成默认头像地址"""
     return "test_url"
+
+
+def encrypt(key, iv, message):
+    """AES加密"""
+    from Crypto.Cipher import AES
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+
+    return cipher.encrypt('The answer is no')
+
+
+def decrypt(key, iv, encode_str):
+    """AES解密"""
+    from Crypto.Cipher import AES
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+
+    return cipher.decrypt(encode_str)

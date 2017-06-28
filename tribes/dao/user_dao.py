@@ -31,7 +31,6 @@ def insert_user(account_name, password_hash, email, avatar):
         values ('{0}', '{1}', '{2}', '{3}')"
     get_id_sql = "select MAX(id) from t_user"
 
-    db_context.begin_transaction()
     db_context.execute(sql, account_name, password_hash, email, avatar)
 
     return db_context.query_count(get_id_sql)
