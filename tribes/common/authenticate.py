@@ -29,8 +29,8 @@ _jwt = LocalProxy(lambda: current_app.extensions['jwt'])
 
 CONFIG_DEFAULTS = {
     'JWT_DEFAULT_REALM': 'Login Required',
-    'JWT_AUTH_URL_RULE': '/auth/token',
-    'JWT_AUTH_REFRESH_URL_RULE': '/auth/refresh',
+    'JWT_AUTH_URL_RULE': '/api/auth/token',
+    'JWT_AUTH_REFRESH_URL_RULE': '/api/auth/refresh',
     'JWT_AUTH_ENDPOINT': 'jwt',
     'JWT_AUTH_USERNAME_KEY': 'username',
     'JWT_AUTH_PASSWORD_KEY': 'password',
@@ -161,11 +161,12 @@ def _default_auth_refresh_handler():
 
 
 def _default_auth_response_handler(access_token, refresh_token=None, identity=None):
+    from common.response import make_result
     if refresh_token:
-        return jsonify({'access_token': access_token.decode('utf-8'),
-                        'refresh_token': refresh_token.decode('utf-8')})
+        return make_result({'access_token': access_token.decode('utf-8'),
+                            'refresh_token': refresh_token.decode('utf-8')})
     else:
-        return jsonify({'access_token': access_token.decode('utf-8')})
+        return make_result({'access_token': access_token.decode('utf-8')})
 
 
 def _default_jwt_error_handler(error):

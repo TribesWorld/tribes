@@ -23,8 +23,9 @@ def database(datasource, with_transaction=False):
                 except Exception as ex:
                     datasource.abort_transaction()
                     raise ex
-                else:
+                finally:
                     datasource.end_transaction()
+                    datasource.close()
             return wrapper
     else:
         def _db(func):
@@ -104,9 +105,11 @@ class Database(object):
 
     def _execute(self, sql, *args):
         """执行sql语句"""
+        from sqlalchemy.exc import SQLAlchemyError
+
         try:
             if not self._conn_state == ConnectState.OPENED:
-                raise 'database connection is closed.'
+                raise SQLAlchemyError('database connection is closed.')
 
             sql = format_sql(sql, *args)
             self._on_execute_sql_handler(sql)

@@ -10,7 +10,7 @@
 """
 
 from common.app import App
-from api import user, add_domain_errors
+from api import user, auth, add_domain_errors
 
 
 class Tribes(App):
@@ -35,6 +35,7 @@ class Tribes(App):
 
 # 必须在实例Tribes之前导入资源文件
 
-tribes = Tribes(use_db=True).instance
+tribes = Tribes().instance
 
 tribes.register_blueprint(user)
+tribes.register_blueprint(auth)

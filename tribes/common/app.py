@@ -56,13 +56,13 @@ class App(object):
         # 选择是否开启JWT
         if kwargs.get('jwt', True) is True:
             app.logger.debug('loading JWT extension...')
-            mail.init_app(app)
-
+            jwt.init_app(app)
         # 选择是否开启mail
-        if kwargs.get('mail', 'True') is True:
+        if kwargs.get('mail', True) is True:
             app.logger.debug('loading mail extension...')
+            mail.init_app(app)
         # 加载数据库
-        if kwargs.get('use_db', False) is True:
+        if kwargs.get('use_db', True) is True:
             app.logger.debug('loading database extension...')
             if 'SQLALCHEMY_DATABASE_URI' in app.config:
                 db.init_app(app)

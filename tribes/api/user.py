@@ -8,60 +8,49 @@
     : copyright: (c) YEAR by v-zhidu.
     : license: LICENSE_NAME, see LICENSE_FILE
 """
-from flask import Blueprint, jsonify, make_response, request
+from flask import Blueprint, request
+
 from common.authenticate import jwt_required
-from common.database import database
-from common.error_handler import make_error
+from common.response import make_result
 from service import user_service
 
 user = Blueprint('user', __name__, url_prefix='/api/user')
 
 
-# @users.route('/<user_id>', methods=['GET'])
-# @jwt_required()
-# def get(user_id):
-#     """GET ／users/<user-id>
-#     根据用户id查找用户基本信息
-#     """
-#     if not _check_existed(user_id):
-#         return make_error(404, message='user not found')
-
-#     result = user_dao.find_user_by_id(user_id)
-#     return jsonify(result)
+@user.route('/<user_id>', methods=['GET'])
+@jwt_required()
+def get(user_id):
+    """GET ／user/<user-id>
+    根据用户id查找用户基本信息
+    """
+    result = user_service.find_user_by_id(int(user_id))
+    return make_result(result)
 
 
-# @users.route('/<user_id>', methods=['PUT'])
-# @jwt_required()
-# def put(user_id):
-#     """PUT /users/<user_id>
-#         根据id更新用户信息
-#     """
-#     if not _check_existed(user_id):
-#         return make_error(404, message='user not found')
+@user.route('/<user_id>', methods=['PUT'])
+@jwt_required()
+def put(user_id):
+    """PUT /users/<user_id>
+        根据id更新用户信息
+    """
+    args = request.get_json()
 
-#     args = request.get_json()
-#     user_dao.edit_user_name(user_id, args['name'])
-
-#     return make_response(get(user_id), 201)
+    return make_result(user_service.update_user_name(user_id, args['name']))
 
 
-# @users.route('/<user_id>', methods=['DELETE'])
-# @jwt_required()
-# def delete(user_id):
-#     """DELETE /users/<user_id>
-#     根据用户id删除用户
-#     """
-#     if not _check_existed(user_id):
-#         return make_error(404, message='user not found')
-#     user_dao.delete_user_by_id(user_id)
-
-#     return make_response('', 204)
+@user.route('/<user_id>', methods=['DELETE'])
+@jwt_required()
+def delete(user_id):
+    """DELETE /users/<user_id>
+    根据用户id删除用户
+    """
+    return make_result(user_service.delete_user(user_id))
 
 
 @user.route('/all', methods=['GET'])
-# @jwt_required()
+@jwt_required()
 def all_user():
     """GET /users/
     获取所有用户
     """
-    return jsonify(user_service.find_all_user())
+    return make_result(user_service.find_all_user())

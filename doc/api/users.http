@@ -1,12 +1,19 @@
 # 获取所有用户
-GET http://{{host}}/api/user
-Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGl0eSI6MSwiaWF0IjoxNDk2NzE3NTI2LCJuYmYiOjE0OTY3MTc1MjYsImV4cCI6MTQ5NjcxNzgyNn0.jw78TAfgWu5RQ61oMbhHDCKe8shIRC1DTyWZe30Fwxw
+GET http://{{host}}/api/user/all
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGl0eSI6eyJzdGF0dXMiOjAsImVtYWlsIjoiZHVfemhpX3FpYW5nQDE2My5jb20iLCJpZCI6MTksImFjY291bnRfbmFtZSI6InYtemhpZHUifSwiaWF0IjoxNDk4NzA4NTg2LCJuYmYiOjE0OTg3MDg1ODYsImV4cCI6MTQ5ODcwODg4NiwidG9rIjoiYWNjZXNzX3Rva2VuIn0.U0TBR7um2-50q-Q3aBH-KQbxHCHaR2XyttH6vmiHa-0
+
+###
+
+# 获取用户信息
+GET http://{{host}}/api/user/20
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGl0eSI6eyJzdGF0dXMiOjAsImVtYWlsIjoiZHVfemhpX3FpYW5nQDE2My5jb20iLCJpZCI6MTksImFjY291bnRfbmFtZSI6InYtemhpZHUifSwiaWF0IjoxNDk4NzA4NTg2LCJuYmYiOjE0OTg3MDg1ODYsImV4cCI6MTQ5ODcwODg4NiwidG9rIjoiYWNjZXNzX3Rva2VuIn0.U0TBR7um2-50q-Q3aBH-KQbxHCHaR2XyttH6vmiHa-0
 
 ###
 
 # 更新用户信息
-PUT http://{{host}}/users/1
+PUT http://{{host}}/api/user/19
 Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGl0eSI6eyJzdGF0dXMiOjAsImVtYWlsIjoiZHVfemhpX3FpYW5nQDE2My5jb20iLCJpZCI6MTksImFjY291bnRfbmFtZSI6InYtemhpZHUifSwiaWF0IjoxNDk4NzA4NTg2LCJuYmYiOjE0OTg3MDg1ODYsImV4cCI6MTQ5ODcwODg4NiwidG9rIjoiYWNjZXNzX3Rva2VuIn0.U0TBR7um2-50q-Q3aBH-KQbxHCHaR2XyttH6vmiHa-0
 
 {
     "name": "v-zhidu1"
@@ -15,5 +22,7 @@ Content-Type: application/json
 ###
 
 # 删除用户信息
-DELETE  http://{{host}}users/1
+DELETE  http://{{host}}/api/user/19
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGl0eSI6eyJzdGF0dXMiOjAsImVtYWlsIjoiZHVfemhpX3FpYW5nQDE2My5jb20iLCJpZCI6MTksImFjY291bnRfbmFtZSI6InYtemhpZHUifSwiaWF0IjoxNDk4NzA4NTg2LCJuYmYiOjE0OTg3MDg1ODYsImV4cCI6MTQ5ODcwODg4NiwidG9rIjoiYWNjZXNzX3Rva2VuIn0.U0TBR7um2-50q-Q3aBH-KQbxHCHaR2XyttH6vmiHa-0
+
 

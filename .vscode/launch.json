@@ -113,7 +113,7 @@
             "name": "Flask",
             "type": "python",
             "request": "launch",
-            "stopOnEntry": true,
+            "stopOnEntry": false,
             "pythonPath": "${config:python.pythonPath}",
             "program": "${workspaceRoot}/venv/bin/flask",
             "cwd": "${workspaceRoot}",

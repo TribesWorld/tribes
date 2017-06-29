@@ -1,6 +1,6 @@
 # 身份认证模块
 
-POST http://{{host}}/auth/token
+POST http://{{host}}/api/auth/token
 Content-Type: application/json
 
 {
@@ -10,7 +10,7 @@ Content-Type: application/json
 
 ###
 
-POST http://{{host}}/auth/refresh
+POST http://{{host}}/api/auth/refresh
 Content-Type: application/json
 
 {
@@ -27,12 +27,11 @@ Content-Type: application/json
 {
     "email": "du_zhi_qiang@163.com",
     "name": "v-zhidu",
-    "password": "12345",
-    "callback_url": "http://example.url.com"
+    "password": "12345"
 }
 
 ###
 
 # 验证邮箱有否有效
 
-GET http://{{host}}/auth/verify_email/du_zhi_qiang@126.com
+GET http://{{host}}/api/auth/verify_email/du_zhi_qiang@163.com

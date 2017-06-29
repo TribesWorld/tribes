@@ -9,13 +9,15 @@
     : license: LICENSE_NAME, see LICENSE_FILE
 """
 from api.user import user
+from api.auth import auth
 
 
 def add_domain_errors(app):
     """添加业务逻辑异常处理"""
-    # from common.errors import make_error
+    from common.response import make_error
+    from service.exceptions import TribesError
 
-    # @app.errorhandler(404)
-    # def method_not_found(e):
-    #     """请求方法未找到"""
-    #     return make_error(404, 'Ser1vice Not Found')
+    @app.errorhandler(TribesError)
+    def tribes_error(e):
+        """数据库操作异常"""
+        return make_error(e.message)

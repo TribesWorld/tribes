@@ -10,22 +10,32 @@
 """
 
 
-class ValidationError(ValueError):
+class TribesError(Exception):
+    """应用程序业务逻辑异常"""
+
+    def __init__(self, message):
+        self.message = message
+        super(TribesError, self).__init__()
+
+
+class ValidationError(TribesError):
     """参数校验错误，验证请求或参数格式不正确"""
-    pass
+
+    def __init__(self, varible):
+        super(ValidationError, self).__init__(str(varible) + ' is invalid')
 
 
-class UserNotFoundError(Exception):
+class UserNotFoundError(TribesError):
     """用户不存在异常"""
-    pass
+
+    def __init__(self, name_or_id):
+        super(UserNotFoundError, self).__init__(
+            'user id or name: ' + str(name_or_id) + ' is not exist.')
 
 
-def add_domain_errors(app):
-    """添加业务逻辑异常处理"""
+class UserEmailExistError(TribesError):
+    """用户名已存在异常"""
 
-    from common.errors import make_error
-
-    @app.errorhandler(404)
-    def method_not_found(e):
-        """请求方法未找到"""
-        return make_error(404, 'Service Not Found')
+    def __init__(self, email):
+        super(UserEmailExistError, self).__init__(
+            str(email) + ' is already exist.')

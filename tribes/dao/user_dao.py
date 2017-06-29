@@ -38,13 +38,13 @@ def insert_user(account_name, password_hash, email, avatar):
 
 def find_all():
     """根据用户id查找用户"""
-    sql = 'select id, account_name, email, status from t_user'
+    sql = 'select id, account_name, email, avatar_url, status from t_user'
     return db_context.query(sql)
 
 
 def find_user_by_id(user_id):
     """根据用户id查找用户"""
-    sql = 'select * from t_user where id={0}'
+    sql = 'select id, account_name, email, avatar_url, status from t_user where id={0}'
     return db_context.query_one(sql, user_id)
 
 
