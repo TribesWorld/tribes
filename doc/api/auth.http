@@ -27,7 +27,8 @@ Content-Type: application/json
 {
     "email": "du_zhi_qiang@163.com",
     "name": "v-zhidu",
-    "password": "12345"
+    "password": "12345",
+    "callback_url": "http://baidu.com"
 }
 
 ###

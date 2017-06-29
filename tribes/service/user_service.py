@@ -8,9 +8,11 @@
     : copyright: (c) YEAR by v-zhidu.
     : license: LICENSE_NAME, see LICENSE_FILE
 """
-from dao import user_dao, db_context
+from flask import current_app
+
 from common.database import database
-from service.exceptions import ValidationError, UserNotFoundError
+from dao import db_context, user_dao
+from service.exceptions import UserNotFoundError, ValidationError
 
 
 @database(db_context, False)
@@ -45,7 +47,7 @@ def find_user_by_login_name(user_name):
 
 
 @database(db_context, True)
-def add_user(email, user_name, password):
+def add_user(email, user_name, password, callback_url, host):
     """添加新用户"""
     from service.mail_service import send_verify_email
     from service.exceptions import UserEmailExistError
@@ -60,7 +62,7 @@ def add_user(email, user_name, password):
     user_id = user_dao.insert_user(user_name, encode_password(
         password), email, avartar_url)
     # TODO(du_zhi_qiang@163.com): 异步发送确认邮件
-    send_verify_email(user_name, email, 'temp_url')
+    send_verify_email(user_name, email, callback_url, host)
 
     return user_id
 
@@ -91,3 +93,20 @@ def delete_user(user_id):
 def check_email(email):
     """检查邮箱是否存在"""
     return not user_dao.is_email_existed(email)
+
+
+@database(db_context, True)
+def confirm_account(token):
+    """激活账户"""
+    from common.utils import load_token
+
+    data = load_token(current_app.config['SECRET_KEY'], token)
+
+    if 'name' in data:
+        if not user_dao.is_email_existed(data['email']):
+            raise UserNotFoundError(data['name'])
+        user_dao.update_user_status(data['name'])
+    else:
+        raise ValidationError('token')
+
+    return data['callback_url']

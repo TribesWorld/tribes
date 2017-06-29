@@ -19,5 +19,5 @@ def add_domain_errors(app):
 
     @app.errorhandler(TribesError)
     def tribes_error(e):
-        """数据库操作异常"""
+        """业务逻辑异常"""
         return make_error(e.message)

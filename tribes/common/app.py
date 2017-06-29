@@ -58,15 +58,14 @@ class App(object):
             app.logger.debug('loading JWT extension...')
             jwt.init_app(app)
         # 选择是否开启mail
-        if kwargs.get('mail', True) is True:
+        if 'MAIL_SERVER' in app.config:
             app.logger.debug('loading mail extension...')
             mail.init_app(app)
         # 加载数据库
-        if kwargs.get('use_db', True) is True:
+        if 'SQLALCHEMY_DATABASE_URI' in app.config:
             app.logger.debug('loading database extension...')
-            if 'SQLALCHEMY_DATABASE_URI' in app.config:
-                db.init_app(app)
-                db.app = app
+            db.init_app(app)
+            db.app = app
 
             if 'SCRIPT_FOLDER' in app.config:
                 from database import Database
@@ -74,4 +73,4 @@ class App(object):
                 db_context.init_db(app.config['SCRIPT_FOLDER'])
             else:
                 raise Exception(
-                    'SQLALCHEMY_DATABASE_URI must be set in config.py')
+                    'SCRIPT_FOLDER must be set in config.py')

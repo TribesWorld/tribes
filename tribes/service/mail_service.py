@@ -8,20 +8,21 @@
     : copyright: (c) YEAR by v-zhidu.
     : license: LICENSE_NAME, see LICENSE_FILE
 """
-from flask import current_app, render_template
-
+from flask import render_template, current_app
 from common.app import mail
 from common.emails import Email
-from common.utils import encrypt
+from common.utils import generate_token
+
 mail = Email(mail)
 
-ADMIN_EMAIL = current_app.config.get('MAIL_DEFAULT_SENDER')
-SECRET_KEY = current_app.config.get('SECRET_KEY')
 
-
-def send_verify_email(username, email, callback_url):
+def send_verify_email(username, email, callback_url, host):
     """验证用户邮箱"""
     subject = 'Tribes - 用户验证邮件'
-    active_accout_url = 'http://localhost:5001/api/active_account/'
-    mail.send_email(subject, ADMIN_EMAIL, [email], text_body=render_template(
+    data = {'name': username, 'email': email, 'callback_url': callback_url}
+    token = generate_token(data, current_app.config['SECRET_KEY'])
+    active_accout_url = 'http://{0}/api/auth/active_account?token={1}'.format(
+        host, token)
+
+    mail.send_email(subject, [email], text_body=render_template(
         'verify_email.txt', name=username, verify_link=active_accout_url))

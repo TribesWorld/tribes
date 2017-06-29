@@ -8,7 +8,7 @@
     : copyright: (c) YEAR by v-zhidu.
     : license: LICENSE_NAME, see LICENSE_FILE
 """
-from flask import Blueprint, request
+from flask import Blueprint, request, redirect
 
 from common.app import jwt
 from common.response import make_login_error, make_result
@@ -54,15 +54,20 @@ def verify_email(email):
 def sign_up():
     """注册新用户"""
     args = request.get_json()
+    host = request.host
 
     user_id = user_service.add_user(
-        args['email'], args['name'], args['password'])
+        args['email'], args['name'], args['password'], args['callback_url'], host)
 
     return make_result({'id': user_id})
 
-# @auth.route('/active_account/<active_code>', methods=['GET'])
-# def active_account(active_code):
-#     """账号激活接口
-#     active_code 加密激活码需解码为用户邮箱，回调地址
-#     """
-#     pass
+
+@auth.route('/active_account', methods=['GET'])
+def active_account():
+    """账号激活接口
+    token 加密激活码需解码为用户邮箱，回调地址
+    """
+    token = request.args.get('token')
+    url = user_service.confirm_account(token)
+
+    return redirect(url)

@@ -54,17 +54,16 @@ def generate_avatar():
     return "test_url"
 
 
-def encrypt(key, iv, message):
-    """AES加密"""
-    from Crypto.Cipher import AES
-    cipher = AES.new(key, AES.MODE_CBC, iv)
+def generate_token(data, secret_key, expires_in=3600):
+    """生成确认令牌"""
+    from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+    s = Serializer(secret_key, expires_in)
+    return s.dumps(data)
 
-    return cipher.encrypt('The answer is no')
 
+def load_token(secret_key, token):
+    """加载令牌"""
+    from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+    s = Serializer(secret_key)
 
-def decrypt(key, iv, encode_str):
-    """AES解密"""
-    from Crypto.Cipher import AES
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-
-    return cipher.decrypt(encode_str)
+    return s.loads(token)

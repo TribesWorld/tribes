@@ -64,3 +64,9 @@ def delete_user_by_id(user_id):
     """根据id删除用户"""
     sql = 'delete from t_user where id={0}'
     db_context.execute(sql, user_id)
+
+
+def update_user_status(user_name):
+    """确认用户状态"""
+    sql = "update t_user set status = 1 where account_name='{0}'"
+    return db_context.execute(sql, user_name)

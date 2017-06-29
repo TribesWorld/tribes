@@ -8,10 +8,16 @@
     : copyright: (c) YEAR by v-zhidu.
     : license: LICENSE_NAME, see LICENSE_FILE
 """
+from flask import current_app
 from flask_mail import Message
-from decorators import async
+
+from common.decorators import singleton
+
+ADMIN_EMAIL = current_app.config.get('MAIL_DEFAULT_SENDER')
+SECRET_KEY = current_app.config.get('SECRET_KEY')
 
 
+@singleton
 class Email(object):
     """Email 服务"""
 
@@ -21,11 +27,12 @@ class Email(object):
     # TODO(du_zhi_qiang@163.com): 异步发送邮件
     def send_async_email(self, msg):
         """异步发送邮件"""
-        self._mail.send(msg)
+        if 'mail' in current_app.extensions:
+            self._mail.send(msg)
 
-    def send_email(self, subject, sender, recipients, text_body=None, html_body=None):
+    def send_email(self, subject, recipients, text_body=None, html_body=None):
         """发送邮件"""
-        msg = Message(subject, sender=sender, recipients=recipients)
+        msg = Message(subject, sender=ADMIN_EMAIL, recipients=recipients)
 
         if text_body:
             msg.body = text_body

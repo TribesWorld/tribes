@@ -12,6 +12,19 @@
 from threading import Thread
 
 
+def singleton(cls):
+    """单例模式装饰器"""
+    instances = {}
+    from functools import wraps
+
+    @wraps(cls)
+    def getinstance(*args, **kw):
+        if cls not in instances:
+            instances[cls] = cls(*args, **kw)
+        return instances[cls]
+    return getinstance
+
+
 def async(f):
     """异步任务"""
     def wrapper(*args, **kwargs):
