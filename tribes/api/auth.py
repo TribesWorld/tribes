@@ -18,10 +18,13 @@ auth = Blueprint('auth', __name__, url_prefix='/api/auth')
 
 
 @jwt.authentication_handler
-def authenticate(username, password):
+def authenticate(name_or_email, password):
     """身份认证方法"""
     from common.utils import verify_password
-    user = user_service.find_user_by_login_name(username)
+    if user_service.check_email(name_or_email):
+        user = user_service.find_user_by_email(name_or_email)
+    else:
+        user = user_service.find_user_by_login_name(name_or_email)
     if user and verify_password(password, user['password_hash']):
         return {
             'id': user['id'],

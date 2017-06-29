@@ -54,6 +54,12 @@ def find_user_by_login_name(account_name):
     return db_context.query_one(sql, account_name)
 
 
+def find_user_by_email(email):
+    """根据用户登录名称查找"""
+    sql = "select * from t_user where email='{0}'"
+    return db_context.query_one(sql, email)
+
+
 def edit_user_name(user_id, account_name):
     """根据id修改用户姓名"""
     sql = "update t_user set account_name='{0}' where id={1}"

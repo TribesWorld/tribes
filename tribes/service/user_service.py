@@ -36,6 +36,17 @@ def find_user_by_id(user_id):
 
 
 @database(db_context, False)
+def find_user_by_email(email):
+    """根据用户名查找用户"""
+    user = user_dao.find_user_by_email(email)
+
+    if not user:
+        raise UserNotFoundError(email)
+
+    return user
+
+
+@database(db_context, False)
 def find_user_by_login_name(user_name):
     """根据用户名查找用户"""
     user = user_dao.find_user_by_login_name(user_name)
@@ -92,7 +103,7 @@ def delete_user(user_id):
 @database(db_context, False)
 def check_email(email):
     """检查邮箱是否存在"""
-    return not user_dao.is_email_existed(email)
+    return user_dao.is_email_existed(email)
 
 
 @database(db_context, True)

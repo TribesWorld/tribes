@@ -4,7 +4,7 @@ POST http://{{host}}/api/auth/token
 Content-Type: application/json
 
 {
-    "username": "v-zhidu",
+    "name_or_email": "du_zhi_qiang@163.com",
     "password": "12345"
 }
 
