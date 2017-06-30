@@ -1,36 +1,42 @@
 language: python
 python:
   - 2.7
-
 sudo: required
-
 services:
   - docker
-
 git:
   submodules: true
-
+addons:
+    apt:
+        packages:
+            - sshpass
 before_install:
   - docker build -t tribeswiki/wiki-service .
   - docker run -itd --name tribes-service -p 5000:5000 tribeswiki/wiki-service
   - docker ps -a
   - docker logs tribes-service
-
-# command to install dependencies
 install:
   - echo 'install dependencies...'
-
 script:
   - echo 'Execute shell command...'
-
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    docker push tribeswiki/wiki-service;
+    docker push tribeswiki/wiki-service; fi
+  - if [ "$TRAVIS_BRANCH" == "develop" ]; then
+    mkdir build;
+    mv * build;
+    tar -czf tribes.tgz build;
+    export SSHPASS=$DEPLOY_TEST_HOST_PASS;
+    sshpass -e scp package.tgz $DEPLOY_TEST_HOST_USER@$DEPLOY_TEST_HOST:$DEPLOY_TEST_HOST_PATH
     fi
-
 notifications:
   slack:
     rooms:
-      - tribesworld:dzHBgVIhNFNIzILqXHeswFgt
-      # - tribesworld:dzHBgVIhNFNIzILqXHeswFgt#tribes
+      - tribesworld:dzHBgVIhNFNIzILqXHeswFgt#tribes
+env:
+  global:
+    - secure: ZXmcZdbYHFEEueyl1ogZIyqnENOdfDaCA2A3sNfvA4m0UKZoqs8e3lKRv9R5hQAxEC+tZ2F6EPL2rmZKDbHmJlcDO9FeuwxDIrWah35ZGgaBndW150GRzbplqZiTGsbaj030lN8GfgaCWzZDHZFvpYesLsuu7lt1g0jGiS686aob2ZcAbSbzq6mw3xX7e0Wi6oGFyf9M2Hwf6+0JpR+XbudV0g6lKo0PmLhI1d55Z3A2qO36XyPlcxObA6YAF8aKoUCdx2M3XK6WaYuhHyODOQX3tQjmf39lS6W+EonL9z6jG4WDMCpMXtYZsTjCMZ0URhHBOHcAfqWhhVn2cLj6FQA6ISWPiJC/no7zvVMUGRhExyhnmXKMECHAproCrk/Yz9zjkPnzvn+fr7koW9FW3Sm0Dhvj4uoNn6QZmCGZdJYoUoqqxn5MRhMjn0y2Qbsd53JXiiOEC8Ff2EOIQwn9R6ocBR6cGeqX2LAxAy6k5L+8d+L6utkheYmhBuq3nCRLxzeId3gkY89RSkMQFBkPsw0OzPTQSSs7FFR7B5yQHicCE+K8MU+zKfxg+o1If71w5NDReIjau7989sPOvqox+/uDYiWMC5HbrZBQSaf+h8kr1ZHEk2C4YSfnooYqHanzs6SWDBraWs1xBdY4q1KDOac7bwnD7k+n4VitnpAW9ws=
+    - secure: UhdmZIbPVe2myHYjoog37zo2HFjVFI5lTnXEzeHlRGv+VzLw3F1AwcZtj+fU99tyTiCVhmiX6A/zDDpulEIkaiexf0mK2NNuAgetco42lxOS+9hd5CgrMLutmm7eQUVKPeqtYY+snp36KsPfFceX37bt2JAba3ejlIMD95DfE3N8FzokP6Ysns6eQHMqvxG7vr0TM9t7DI3l1v76r1IESXu/Rhjzy7XqEhA5MzhWm4txeeV+x8b5BtQN4ou3JxWnX3K5v4r7Q4T0MPhjKvbrOHd8PWZRnc3ogJOQGBKurj36wHDV43ycaeopOmDCmJdnbYllTUMOFi/7fyocb8ml2FO0P+PpgP/PrDpKQFVo2k1Rkx6rewQfkUW4CgFzJ13mWSk3H8kNXLKeQguxmKBD9lAN8L8sSVLsHEVXTxYk+S52l8gLzGpkQ///JowCF07GXTSeSgO26o/uRoHPPic1C9jV5XdWBcqu1ExvWuMEaEH8zwCR3LpMG2amiNtChNM0cnCr0j914CHzd+A3Gxi/46ACgC2URPWv3mhlq2/2GqZQCYyVNuQHdG+whzMBnNkEfSSYOopr4ensD6UDXo25OrXF6MypSarTBaja7JTpKKrC282LLMf953Q1F+RgYP9ZU4BPzulurwx/36iBIh4TA+qWad8ceRUHJDKjw3Gsqd8=
+    - secure: l2rtY8opNL3N44p3E15A4ndhF6ebzX7VFopNWeg4VMQRAq5tHLcT4TUlWbhZWibpCZOTIvIMlpMDH6tyUjZzpRpWK8hyPPBeJ8KVAuBuMY+XZmIRvTGOV9+gFAB0oOYyH1SdXBcC3Ujz0jvNH1ED1jTyjtUQfPT5a7wwLZroaQfeiX4KxQE+wv8WsO4WxjzB4ko+gLtDUaR8cCJCzYrIqJvOHRg9JrVF8d2oyH5cU1DN3hTpvai5znCPvyTMsIwq/y2JjfNG1nliNDwEC+8CCXRwuTAkTrHaczjrfI6zthBqMVEAuuIHl9AQzHyewOi7rRQsHG9BCM6LAJEmnlrapKffb8cJy8aUMM3pUPzzlNFn7dlZD6y7N+fQ0MQihvQaBr+jaZTEq8Dos1d6W69iPd5e1ppJvqYVObQMXXeY5LldcvoAIKew8upZLYj+HH5CHXgyFrbj/kki7YFEqcyR6k3Ww63E5YVbnZPF2CRkY6Md+F3wSPCUPMgbVuXIMJhdRkwCrGTzh2yyZzmNLvvQclqbLc7fTOOBg3njAaDi66nTJT9b5XJH2R/n4hTOpamsVOvdtPOe2wi017QKVXZ+IjincPsMTJ55RZzHuh/vMrmWICvaBbdiu11fM1LkxQ0C6SPYUGSAd5nfM6XUnj2i7R0dE8QCEC9J/YkHASPaPzQ=
+    - secure: frVdrJsCWzu2/PQVKq0ZU84KRLrdlM4a8JPAlt7+y2R+MVK4tIIVrWynvDsVBzGli7NL0LCHnNTA1fl+7UfplVQaesmpZtzVKZeFAZ4El+WBhKEE9IRjUjOl9ui97Ev1LCoBLKrCYtQuam10xapMp+E6wdv5GrjqpVe9kKO7h1SlZWVkoWKmHhHcIvLEPJBR3lzKhfgC7YXsIYP3kbcZbd4rm/DWcxbiwAvt06wMCePSeyOC7CUvenrAUnTg/KpGF/Cc/0lr0IxiKG8pBSyvbcDA8hfX1FFVBtO4SdlJ0q6eGFmcCL1XW9qtAUl3RO67PA9rnw2Ze89Jgty2AIzsr/PBqmylvivMxbOLz3EGyj8KJ/cpfuvdVUp3wh+NAF393uVOWuwrvd/MK76UpBFEQEpmvtXWCNMsN5+CzgihZvjotOoE62aPWmozaF7XYHTzsLnrTAReOdf6W33pawuEQp/5OPgchwMQuQenQpxc3K/2fTbxSwvyVE6pCHojQFiKUp/j/K+acCuDFWelDWEtni2wsWBy3OAmpjWyxUhCmVmQbAayqYJJxd3UeNmY7NWTyUHzEezeY9I4rJoDM1/9FlX+MCR9Zg0x+fEnL2OJm4JlY5xyxMrGHLPFqaLqP1kvW1C/zf276Jk9UiDToMd0jFY4K7xZgcCA3v9qhpZf/C4=
