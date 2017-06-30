@@ -20,7 +20,7 @@ install:
 script:
   - echo 'Execute shell command...'
 after_success:
-  - if [ "$TRAVIS_BRANCH" == "develop" ]; then
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
     docker push tribeswiki/wiki-service; fi
   - if [ "$TRAVIS_BRANCH" == "develop" ]; then
@@ -28,7 +28,7 @@ after_success:
     mv * build;
     tar -czf tribes.tgz build;
     export SSHPASS=$DEPLOY_TEST_HOST_PASS;
-    sshpass -e scp package.tgz $DEPLOY_TEST_HOST_USER@$DEPLOY_TEST_HOST:$DEPLOY_TEST_HOST_PATH
+    sshpass -e scp package.tgz $DEPLOY_TEST_HOST_USER@$DEPLOY_TEST_HOST:$DEPLOY_TEST_HOST_PATH;
     fi
 notifications:
   slack:
