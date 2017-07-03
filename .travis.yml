@@ -24,9 +24,7 @@ after_success:
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
     docker push tribeswiki/wiki-service; fi
   - if [ "$TRAVIS_BRANCH" == "develop" ]; then
-    mkdir build;
-    cp * build;
-    tar -czf tribes.tgz build;
+    tar -czf tribes.tgz *;
     export SSHPASS=$DEPLOY_TEST_HOST_PASS;
     sshpass -e scp package.tgz $DEPLOY_TEST_HOST_USER@$DEPLOY_TEST_HOST:$DEPLOY_TEST_HOST_PATH;
     fi
